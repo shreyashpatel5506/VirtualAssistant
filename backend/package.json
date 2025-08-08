@@ -1,4 +1,28 @@
 {
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Virtuial AI backend full",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shreyashpatel5506/VirtualAssistant.git"
+  },
+  "keywords": [
+    "VirtualAssistant",
+    "AI",
+    "new",
+    "Idea",
+    "MERN"
+  ],
+  "author": "Shreyash Patel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shreyashpatel5506/VirtualAssistant/issues"
+  },
+  "homepage": "https://github.com/shreyashpatel5506/VirtualAssistant#readme",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
