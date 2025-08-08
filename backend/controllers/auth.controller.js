@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs"; // Ensure bcrypt is imported correctly
 import { generateToken, verifyToken } from "./token.js"; // Import the token generation function
-import User from "../models/user.js"; // Import the User model
+import User from "../models/user.model.js";
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
 
 const otpStorage = new Map();
 
-const sendOtp = async (req, res) => {
+export const sendOtp = async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required", success: false });
 
@@ -60,7 +60,7 @@ const sendOtp = async (req, res) => {
     }
 };
 
-const verifyOTP = (req, res) => {
+export const verifyOTP = (req, res) => {
     const { email, otp } = req.body;
     const record = otpStorage.get(email);
     if (record && record.otp === otp) {
@@ -71,7 +71,7 @@ const verifyOTP = (req, res) => {
 };
 
 
-const signUP = async (req, res) => {
+export const signUP = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         if (!name || !email || !password) {
@@ -132,7 +132,7 @@ const signUP = async (req, res) => {
     }
 }
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -174,7 +174,7 @@ const login = async (req, res) => {
 }
 
 
-const passwordReset = async (req, res) => {
+export const passwordReset = async (req, res) => {
     const { email, newPassword } = req.body;
     if (!email || !newPassword) {
         return res.status(400).json({ message: "Email and new password are required", success: false });
@@ -196,7 +196,7 @@ const passwordReset = async (req, res) => {
 }
 
 
-const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
     const { name, assistantName, assistantImage } = req.body;
     const userId = req.user.id; // Assuming user ID is stored in req.user
 
@@ -233,7 +233,7 @@ const updateProfile = async (req, res) => {
     }
 }
 
-const getUserProfile = async (req, res) => {
+export const getUserProfile = async (req, res) => {
     const userId = req.user.id; // Assuming user ID is stored in req.user
 
     try {
@@ -260,20 +260,11 @@ const getUserProfile = async (req, res) => {
     }
 }
 
-const logout = (req, res) => {
+export const logout = (req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "Logged out successfully", success: true });
 }
 
 
-export const authController = {
-    sendOtp,
-    verifyOTP,
-    signUP,
-    login,
-    passwordReset,
-    updateProfile,
-    getUserProfile,
-    logout,
-};
+
 

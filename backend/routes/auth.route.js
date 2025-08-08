@@ -1,16 +1,25 @@
 import express from 'express';
-import { authController } from "../controllers/auth.controller.js";
+import {
+    login,
+    sendOtp,
+    verifyOTP,
+    signUP,
+    updateProfile,
+    getUserProfile,
+    logout,
+    passwordReset
+} from "../controllers/auth.controller.js";
 import { authmiddleware } from '../middlewear/auth.middlewear.js';
 
 
 const authRoute = express.Router();
 
-authRoute.post('/send-otp', authController.sendOtp);
-authRoute.post('/verify-otp', authController.verifyOTP);
-authRoute.post('/register', authController.register);
-authRoute.post('/login', authController.login);
-authRoute.post('/password-reset', authController.passwordReset);
-authRoute.post('/update-profile', authmiddleware, authController.updateProfile);
-authRoute.get('/user-profile', authmiddleware, authController.getUserProfile);
-authRoute.post('/logout', authmiddleware, authController.logout);
+authRoute.post('/send-otp', sendOtp);
+authRoute.post('/verify-otp', verifyOTP);
+authRoute.post('/register', signUP);
+authRoute.post('/login', login);
+authRoute.post('/password-reset', passwordReset);
+authRoute.post('/update-profile', authmiddleware, updateProfile);
+authRoute.get('/user-profile', authmiddleware, getUserProfile);
+authRoute.post('/logout', authmiddleware, logout);
 export default authRoute;
