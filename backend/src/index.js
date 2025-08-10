@@ -4,6 +4,10 @@ import connectMongo from '../config/db.js'; // Import the MongoDB connection
 import cookieParser from 'cookie-parser'; // Middleware to parse cookies
 import dotenv from 'dotenv';
 import authRoute from '../routes/auth.route.js';
+import cors from 'cors';
+
+//give cors 
+
 
 const app = express();
 dotenv.config();
@@ -13,6 +17,12 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 
 //connect mongodb
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+); 
 connectMongo();
 
 // Define routes
@@ -28,3 +38,4 @@ app.use('/api/auth', authRoute); // Use the auth routes
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
 });
+//give cors 

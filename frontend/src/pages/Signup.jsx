@@ -1,17 +1,179 @@
-import React from 'react'
-import bg from '../assets/authBg.png';
-const Signup = () => {
-    return (
-        <div
-            className="w-full h-[100vh] bg-cover flex"
-            style={{
-                backgroundImage: `url(${bg})`
-            }}
-        >
-            <form className="w-full max-w-md m-auto bg-#ffffff p-8 rounded-lg shadow-lg backdrop-blur-2xl h-[500px] flex flex-col justify-center box-shadow">
-            </form>
-        </div>
-    );
-}
+import React, { useState, useEffect } from "react";
+import bg from "../assets/authBg.png";
+import { authStore } from "../storevalues/auth.store.js";
 
-export default Signup
+const Signup = () => {
+  const { sendOtp, verifyOtp, signUP, isSendOtp, isVerifyOtp, isSignup } = authStore();
+
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [cursor, setCursor] = useState({ x: 0, y: 0 });
+   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  // Form fields
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
+  // Mouse movement for 3D effect
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setOffset({ x: x * 20, y: y * 20 });
+    setTilt({x:x*100, y :y*100});
+  };
+
+  const handleMouseLeave = () => {
+    setOffset({ x: 0, y: 0 });
+    setTilt({x:0 ,y:0});
+  };
+
+  // Track custom cursor
+  useEffect(() => {
+    const move = (e) => setCursor({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+
+  // Submit handlers
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    if (email) sendOtp(email);
+  };
+
+  const handleVerifyOtp = (e) => {
+    e.preventDefault();
+    if (email && otp) verifyOtp(email, otp);
+  };
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    if (name && email && password) signUP(name, email, password);
+  };
+
+  return (
+    <div
+      className="relative w-full h-screen bg-cover flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${bg})`,
+      }}
+    >
+      {/* Custom glowing cursor */}
+      <div
+        className="pointer-events-none fixed z-50 w-10 h-10 rounded-full border-2 border-cyan-300 shadow-[0_0_20px_rgba(0,255,255,0.6)]"
+        style={{
+          left: cursor.x - 20,
+          top: cursor.y - 20,
+        }}
+      ></div>
+
+      {/* Form container */}
+      <div
+        className="relative w-full max-w-md bg-white/20 p-8 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-md h-[500px] flex flex-col justify-center gap-4"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          transform: `rotateX(${offset.y / 2}deg) rotateY(${offset.x / 2}deg)`,
+          transition: "transform 0.15s ease-out",
+        }}
+      >
+        {/* Top-left circle */}
+        <div
+          className="absolute -top-12 -left-12 w-32 h-32 rounded-full bg-gradient-to-b from-cyan-300/40 to-transparent backdrop-blur-lg shadow-lg"
+          style={{
+            transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`,
+            transition: "transform 0.15s ease-out",
+          }}
+        ></div>
+
+        {/* Bottom-right circle */}
+        <div
+          className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full bg-gradient-to-t from-purple-400/40 to-transparent backdrop-blur-lg shadow-lg"
+          style={{
+            transform: `translate3d(${-offset.x}px, ${-offset.y}px, 0)`,
+            transition: "transform 0.15s ease-out",
+          }}
+        ></div>
+
+        {/* Multi-step form */}
+        <form className="flex flex-col gap-4 relative z-10">
+          <h1 className="text-2xl font-bold text-white mb-2">Register to VA</h1>
+
+          {/* Step 1: Send OTP */}
+          {!isSendOtp && (
+            <>
+              <input
+                type="email"
+                placeholder="Enter Email"
+                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <button
+                onClick={handleSendOtp}
+                className="p-3 rounded-lg bg-cyan-500 text-white hover:bg-cyan-600 transition"
+              >
+                Send OTP
+              </button>
+            </>
+          )}
+
+          {/* Step 2: Verify OTP */}
+          {isSendOtp && !isVerifyOtp && (
+            <>
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              <button
+                onClick={handleVerifyOtp}
+                className="p-3 rounded-lg bg-purple-500 text-white hover:bg-purple-600 transition"
+              >
+                Verify OTP
+              </button>
+            </>
+          )}
+
+          {/* Step 3: Sign Up */}
+          {isVerifyOtp && !isSignup && (
+            <>
+              <input
+                type="text"
+                placeholder="Full Name"
+                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                onClick={handleSignup}
+                className="p-3 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+              >
+                Sign Up
+              </button>
+            </>
+          )}
+
+          {/* Success message */}
+          {isSignup && (
+            <p className="text-green-300 text-center mt-4">
+              🎉 Signup Successful! You can now login.
+            </p>
+          )}
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Signup;
