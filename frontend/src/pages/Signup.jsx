@@ -174,7 +174,9 @@ const Signup = () => {
               </button>
             </>
           )}
-
+          <p className="text-white text-center mt-4">
+            Already have an account? <a href="/login" className="text-cyan-300">Login</a>
+          </p>
           {/* Success message */}
           {isSignup && (
             <p className="text-green-300 text-center mt-4">

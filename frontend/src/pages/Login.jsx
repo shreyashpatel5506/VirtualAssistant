@@ -111,7 +111,9 @@ const Login = () => {
                     >
                         Login
                     </button>
-
+                    <p className="text-white text-center mt-4">
+                        Don't have an account? <a href="/signup" className="text-cyan-300">Sign Up</a>
+                    </p>
                     {isLogin && (
                         <p className="text-green-300 text-center mt-4">
                             🎉 Login Successful!
