@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import bg from "../assets/authBg.png";
 import { authStore } from "../storevalues/auth.store.js";
 import { Eye, EyeOff } from 'lucide-react';
+import UserProvider from "../Context/usercontext.js";
 
 const Login = () => {
     const { login, isLogin } = authStore();
     const [showpassword, setShowpassword] = useState(false);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
     const [cursor, setCursor] = useState({ x: 0, y: 0 });
-
+    const [users, setUsers] = useContext(UserProvider);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -32,7 +33,8 @@ const Login = () => {
     const handleLogin = (e) => {
         e.preventDefault();
         if (email && password) {
-            login(email, password);
+            const result = login(email, password);
+            setUsers({ ...users, ...result });
         }
     };
 

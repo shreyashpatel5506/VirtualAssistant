@@ -1,18 +1,15 @@
-import React from 'react'
-import { Children } from 'react';
-import { useContext } from 'react'
-import { getUserProfile } from '../../../backend/controllers/auth.controller';
-import { useEffect } from 'react';
+// usercontext.js
+import React, { useEffect, useState, createContext } from 'react';
+import { getUserProfile } from '../../../backend/controllers/auth.controller'; // ⚠ should be API call, not backend import
 
-const UserContext = React.createContext();
+export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = React.useState(null);
+    const [users, setUsers] = useState(null);
 
-    const value = { user, setUser };
     const handleCurrentUser = async () => {
         const currentUser = await getUserProfile();
-        setUser(currentUser);
+        setUsers(currentUser);
     };
 
     useEffect(() => {
@@ -20,8 +17,10 @@ const UserProvider = ({ children }) => {
     }, []);
 
     return (
-        <UserContext.Provider value={value}>{children}</UserContext.Provider>
-    )
-}
+        <UserContext.Provider value={{ users, setUsers }}>
+            {children}
+        </UserContext.Provider>
+    );
+};
 
 export default UserProvider;

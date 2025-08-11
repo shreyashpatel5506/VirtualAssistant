@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import bg from "../assets/authBg.png";
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, User } from 'lucide-react';
 import { authStore } from "../storevalues/auth.store.js";
+import UserProvider from './../Context/usercontext';
 
 const Signup = () => {
   const { sendOtp, verifyOtp, signUP, isSendOtp, isVerifyOtp, isSignup } = authStore();
-
+  const { users, setUsers } = useContext(UserProvider);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -50,7 +51,10 @@ const Signup = () => {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    if (name && email && password) signUP(name, email, password);
+    if (name && email && password) {
+      const result = signUP(name, email, password);
+      setUsers({ ...users, ...result });
+    }
   };
 
   return (
