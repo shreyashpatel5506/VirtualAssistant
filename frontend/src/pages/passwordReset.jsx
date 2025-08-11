@@ -7,7 +7,6 @@ const PasswordReset = () => {
     const { passwordReset } = authStore();
     const [showpassword, setShowpassword] = useState(false);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
-    const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
     const [email, setEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -21,11 +20,7 @@ const PasswordReset = () => {
 
     const handleMouseLeave = () => setOffset({ x: 0, y: 0 });
 
-    useEffect(() => {
-        const move = (e) => setCursor({ x: e.clientX, y: e.clientY });
-        window.addEventListener("mousemove", move);
-        return () => window.removeEventListener("mousemove", move);
-    }, []);
+
 
     const handleReset = (e) => {
         e.preventDefault();
@@ -39,14 +34,7 @@ const PasswordReset = () => {
             className="relative w-full h-screen bg-cover flex items-center justify-center"
             style={{ backgroundImage: `url(${bg})` }}
         >
-            {/* Glowing cursor */}
-            <div
-                className="pointer-events-none fixed z-50 w-10 h-10 rounded-full border-2 border-cyan-300 shadow-[0_0_20px_rgba(0,255,255,0.6)]"
-                style={{
-                    left: cursor.x - 20,
-                    top: cursor.y - 20,
-                }}
-            ></div>
+
 
             {/* Form container */}
             <div

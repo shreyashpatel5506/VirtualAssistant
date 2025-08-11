@@ -2,14 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import bg from "../assets/authBg.png";
 import { authStore } from "../storevalues/auth.store.js";
 import { Eye, EyeOff } from 'lucide-react';
-import UserProvider from "../Context/usercontext.js";
+import { UserContext } from "../Context/usercontext.jsx";
 
 const Login = () => {
     const { login, isLogin } = authStore();
     const [showpassword, setShowpassword] = useState(false);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
-    const [cursor, setCursor] = useState({ x: 0, y: 0 });
-    const [users, setUsers] = useContext(UserProvider);
+
+    const { users, setUsers } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -24,11 +24,7 @@ const Login = () => {
     const handleMouseLeave = () => setOffset({ x: 0, y: 0 });
 
     // Custom glowing cursor
-    useEffect(() => {
-        const move = (e) => setCursor({ x: e.clientX, y: e.clientY });
-        window.addEventListener("mousemove", move);
-        return () => window.removeEventListener("mousemove", move);
-    }, []);
+
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -44,13 +40,7 @@ const Login = () => {
             style={{ backgroundImage: `url(${bg})` }}
         >
             {/* Glowing cursor */}
-            <div
-                className="pointer-events-none fixed z-50 w-10 h-10 rounded-full border-2 border-cyan-300 shadow-[0_0_20px_rgba(0,255,255,0.6)]"
-                style={{
-                    left: cursor.x - 20,
-                    top: cursor.y - 20,
-                }}
-            ></div>
+
 
             {/* Form container */}
             <div

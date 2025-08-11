@@ -2,13 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import bg from "../assets/authBg.png";
 import { Eye, EyeOff, User } from 'lucide-react';
 import { authStore } from "../storevalues/auth.store.js";
-import UserProvider from './../Context/usercontext';
+import { UserContext } from './../Context/usercontext';
 
 const Signup = () => {
   const { sendOtp, verifyOtp, signUP, isSendOtp, isVerifyOtp, isSignup } = authStore();
-  const { users, setUsers } = useContext(UserProvider);
+  const { users, setUsers } = useContext(UserContext);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [cursor, setCursor] = useState({ x: 0, y: 0 });
+
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   // Form fields
@@ -32,11 +32,6 @@ const Signup = () => {
   };
 
   // Track custom cursor
-  useEffect(() => {
-    const move = (e) => setCursor({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
-  }, []);
 
   // Submit handlers
   const handleSendOtp = (e) => {
@@ -65,13 +60,6 @@ const Signup = () => {
       }}
     >
       {/* Custom glowing cursor */}
-      <div
-        className="pointer-events-none fixed z-50 w-10 h-10 rounded-full border-2 border-cyan-300 shadow-[0_0_20px_rgba(0,255,255,0.6)]"
-        style={{
-          left: cursor.x - 20,
-          top: cursor.y - 20,
-        }}
-      ></div>
 
       {/* Form container */}
       <div

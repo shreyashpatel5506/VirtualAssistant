@@ -1,6 +1,5 @@
 // usercontext.js
-import React, { useEffect, useState, createContext } from 'react';
-import { getUserProfile } from '../../../backend/controllers/auth.controller'; // ⚠ should be API call, not backend import
+import React, { useEffect, useState, createContext } from 'react';// ⚠ should be API call, not backend import
 
 export const UserContext = createContext();
 
