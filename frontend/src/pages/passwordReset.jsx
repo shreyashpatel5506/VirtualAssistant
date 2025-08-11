@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import bg from "../assets/authBg.png";
 import { authStore } from "../storevalues/auth.store.js";
+import React from "react";
 
 const PasswordReset = () => {
     const { passwordReset } = authStore();
-
+    const [showpassword, setShowpassword] = useState(false);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
     const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
@@ -94,7 +95,13 @@ const PasswordReset = () => {
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                     />
-
+                    <button
+                        type="button"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        onClick={() => setShowpassword(!showpassword)}
+                    >
+                        {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
                     <button
                         onClick={handleReset}
                         className="p-3 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"

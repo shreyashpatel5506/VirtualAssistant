@@ -7,26 +7,26 @@ const Signup = () => {
 
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
-   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   // Form fields
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-
+  const [showpassword, setShowpassword] = useState(false);
   // Mouse movement for 3D effect
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     setOffset({ x: x * 20, y: y * 20 });
-    setTilt({x:x*100, y :y*100});
+    setTilt({ x: x * 100, y: y * 100 });
   };
 
   const handleMouseLeave = () => {
     setOffset({ x: 0, y: 0 });
-    setTilt({x:0 ,y:0});
+    setTilt({ x: 0, y: 0 });
   };
 
   // Track custom cursor
@@ -155,6 +155,13 @@ const Signup = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                onClick={() => setShowpassword(!showpassword)}
+              >
+                {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
               <button
                 onClick={handleSignup}
                 className="p-3 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
