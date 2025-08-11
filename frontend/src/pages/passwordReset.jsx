@@ -106,7 +106,7 @@ const PasswordReset = () => {
 
                     <button
                         onClick={handleReset}
-                        className="p-3 rounded-full bg-green-500 text-white hover:bg-green-600 transition"
+                        className="p-3 rounded-full bg-white text-black hover:bg-white transition"
                     >
                         Reset Password
                     </button>

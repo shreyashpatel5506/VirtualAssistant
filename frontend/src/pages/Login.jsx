@@ -107,7 +107,7 @@ const Login = () => {
 
                     <button
                         onClick={handleLogin}
-                        className="p-3 rounded-full bg-cyan-500 text-white hover:bg-cyan-600 transition"
+                        className="p-3 rounded-full bg-white text-black hover:bg-white transition"
                     >
                         Login
                     </button>
