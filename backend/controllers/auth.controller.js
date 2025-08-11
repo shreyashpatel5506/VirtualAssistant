@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 const otpStorage = new Map();
 
 export const sendOtp = async (req, res) => {
-    const {email} = req.body;
+    const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required", success: false });
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -87,23 +87,23 @@ export const signUP = async (req, res) => {
         if (!record || !record.verified) {
             return res.status(400).json({ message: "OTP not verified", success: false });
         }
-       const existingUser = await User.findOne({ email });
-if (existingUser) {
-    return res.status(409).json({ message: "User already exists", success: false });
-}
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: "User already exists", success: false });
+        }
 
         // Hash the password before saving
         if (password.length < 6) {
             return res.status(422).json({ message: "Password must be at least 6 characters", success: false });
         }
-        
+
         const hashedPassword = bcrypt.hashSync(password, 10);
         const newUser = new User({
             name,
             email,
             password: hashedPassword,
         });
-        
+
         const token = generateToken(newUser);
         await newUser.save()
         if (record.verified) {

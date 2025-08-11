@@ -1,4 +1,4 @@
-import {axiosInstance} from '../lib/axiosInstanace.js';
+import { axiosInstance } from '../lib/axiosInstanace.js';
 import { create } from "zustand";
 import { toast } from 'react-hot-toast';
 
@@ -86,5 +86,18 @@ export const authStore = create((set, get) => ({
             toast.error("Error during password reset");
         }
     },
+    getCurrentUser: async (userId) => {
+        try {
+            const response = await axiosInstance.get(`/auth/user/user-profile`);
+            if (response.data.success) {
+                set({ user: response.data.user, isAuthenticated: true });
+            } else {
+                set({ user: null, isAuthenticated: false });
+            }
+        } catch (error) {
+            console.error("Error fetching current user:", error);
+            set({ user: null, isAuthenticated: false });
+        }
+    }
 }));
 
