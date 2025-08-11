@@ -82,7 +82,7 @@ const Login = () => {
                     <input
                         type="email"
                         placeholder="Enter Email"
-                        className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                        className="p-3 rounded-lg border-1-white border-radius-100 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
