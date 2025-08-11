@@ -11,7 +11,8 @@ import { ImagePlus } from "lucide-react";
 
 function Customize() {
     return (
-        <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex justify-center items-center p-4">
+        <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col justify-center items-center gap-5 p-4">
+            <h1 className="text-white text-2xl">Select your <span className="text-cyan-300 text-4xl">Virtual Assistant</span></h1>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-5 max-w-7xl w-full">
                 <Card image={image1} />
                 <Card image={image2} />
@@ -25,6 +26,7 @@ function Customize() {
                     <ImagePlus className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14" color="#ffffff" />
                 </div>
             </div>
+            <button className="mt-4 py-7 px-12 rounded-full bg-white text-black  transition"><span className="font-bold text-2xl">Confirm Selection</span></button>
         </div>
     );
 }
