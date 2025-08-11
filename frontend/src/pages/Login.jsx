@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import bg from "../assets/authBg.png";
 import { authStore } from "../storevalues/auth.store.js";
-import React from "react";
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
     const { login, isLogin } = authStore();
@@ -83,28 +83,31 @@ const Login = () => {
                     <input
                         type="email"
                         placeholder="Enter Email"
-                        className="p-3 rounded-lg border-1-white border-radius-100 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                        className="p-3 rounded-full border-1-white border-radius-100 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
 
-                    <input
-                        type="password"
-                        placeholder="Enter Password"
-                        className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        onClick={() => setShowpassword(!showpassword)}
-                    >
-                        {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
+                    <div className="relative">
+                        <input
+                            type={showpassword ? "text" : "password"}
+                            placeholder="Enter Password"
+                            className="w-full p-3 pr-10 rounded-full bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            onClick={() => setShowpassword(!showpassword)}
+                        >
+                            {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                    </div>
+
                     <button
                         onClick={handleLogin}
-                        className="p-3 rounded-lg bg-cyan-500 text-white hover:bg-cyan-600 transition"
+                        className="p-3 rounded-full bg-cyan-500 text-white hover:bg-cyan-600 transition"
                     >
                         Login
                     </button>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import bg from "../assets/authBg.png";
 import { authStore } from "../storevalues/auth.store.js";
-import React from "react";
+import { Eye, EyeOff } from 'lucide-react';
 
 const PasswordReset = () => {
     const { passwordReset } = authStore();
@@ -83,28 +83,30 @@ const PasswordReset = () => {
                     <input
                         type="email"
                         placeholder="Enter Email"
-                        className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                        className="p-3 rounded-full bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    <div className="relative">
+                        <input
+                            type={showpassword ? "text" : "password"}
+                            placeholder="Enter Password"
+                            className="w-full p-3 pr-10 rounded-full bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            onClick={() => setShowpassword(!showpassword)}
+                        >
+                            {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                    </div>
 
-                    <input
-                        type="password"
-                        placeholder="Enter New Password"
-                        className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                    />
-                    <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        onClick={() => setShowpassword(!showpassword)}
-                    >
-                        {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
                     <button
                         onClick={handleReset}
-                        className="p-3 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+                        className="p-3 rounded-full bg-green-500 text-white hover:bg-green-600 transition"
                     >
                         Reset Password
                     </button>

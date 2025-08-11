@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import bg from "../assets/authBg.png";
+import { Eye, EyeOff } from 'lucide-react';
 import { authStore } from "../storevalues/auth.store.js";
 
 const Signup = () => {
@@ -106,13 +107,13 @@ const Signup = () => {
               <input
                 type="email"
                 placeholder="Enter Email"
-                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                className="p-3 rounded-full bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <button
                 onClick={handleSendOtp}
-                className="p-3 rounded-lg bg-cyan-500 text-white hover:bg-cyan-600 transition"
+                className="p-3 rounded-full bg-cyan-500 text-white hover:bg-cyan-600 transition"
               >
                 Send OTP
               </button>
@@ -125,13 +126,13 @@ const Signup = () => {
               <input
                 type="text"
                 placeholder="Enter OTP"
-                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                className="p-3 rounded-full bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
               />
               <button
                 onClick={handleVerifyOtp}
-                className="p-3 rounded-lg bg-purple-500 text-white hover:bg-purple-600 transition"
+                className="p-3 rounded-full bg-purple-500 text-white hover:bg-purple-600 transition"
               >
                 Verify OTP
               </button>
@@ -144,27 +145,30 @@ const Signup = () => {
               <input
                 type="text"
                 placeholder="Full Name"
-                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                className="p-3 rounded-full bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              <input
-                type="password"
-                placeholder="Password"
-                className="p-3 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                onClick={() => setShowpassword(!showpassword)}
-              >
-                {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
+              <div className="relative">
+                <input
+                  type={showpassword ? "text" : "password"}
+                  placeholder="Enter Password"
+                  className="w-full p-3 pr-10 rounded-full bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowpassword(!showpassword)}
+                >
+                  {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+
               <button
                 onClick={handleSignup}
-                className="p-3 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+                className="p-3 rounded-full bg-green-500 text-white hover:bg-green-600 transition"
               >
                 Sign Up
               </button>
