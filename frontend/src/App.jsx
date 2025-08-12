@@ -35,7 +35,7 @@ function App() {
         <Route path="/login" element={!users ? <Login /> : <Home />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/customize" element={users ? <Customize /> : <Login />} />
-        <Route path="/customize2" element={<Customize2 />} />
+        <Route path="/customize2" element={users ? <Customize2 /> : <Login />} />
       </Routes>
     </>
   )
