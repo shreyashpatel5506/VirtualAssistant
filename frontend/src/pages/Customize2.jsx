@@ -21,7 +21,7 @@ const Customize2 = () => {
         }
         const result = await updateAssistant(selectedAssistant, assistantName);
         if (result) {
-            navigate("/home");
+            navigate("/");
         }
     };
 
