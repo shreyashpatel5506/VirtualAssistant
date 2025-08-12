@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs"; // Ensure bcrypt is imported correctly
 import { generateToken, verifyToken } from "./token.js"; // Import the token generation function
 import User from "../models/user.model.js";
+import uploadOnCloudinary from './../config/cloudinary.js';
 
 dotenv.config();
 
@@ -198,24 +199,30 @@ export const passwordReset = async (req, res) => {
 
 
 export const updateProfile = async (req, res) => {
-    const { name, assistantName, assistantImage } = req.body;
-    const userId = req.user.id; // Assuming user ID is stored in req.user
+    const { assistantName, assistantImage } = req.body; // matching frontend naming
+    const userId = req.user.id; // comes from JWT now
 
-    if (!name || !assistantName || !assistantImage) {
+    if (!assistantName || !assistantImage) {
         return res.status(400).json({ message: "All fields are required", success: false });
     }
 
+    let finalImage = assistantImage;
+
+    // If file is uploaded, override the image from body
+    if (req.file) {
+        finalImage = await uploadOnCloudinary(req.file);
+    }
+
     try {
-        const user = await User.findById(userId);
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { assistantName, assistantImage: finalImage },
+            { new: true }
+        ).select("-password");
+
         if (!user) {
             return res.status(404).json({ message: "User not found", success: false });
         }
-
-        user.name = name;
-        user.assistantName = assistantName;
-        user.assistantImage = assistantImage;
-
-        await user.save();
 
         res.status(200).json({
             message: "Profile updated successfully",
@@ -232,7 +239,8 @@ export const updateProfile = async (req, res) => {
         console.error("Error updating profile:", error);
         res.status(500).json({ message: "Internal server error", success: false });
     }
-}
+};
+
 
 export const getUserProfile = async (req, res) => {
     const userId = req.user.id; // Assuming user ID is stored in req.user

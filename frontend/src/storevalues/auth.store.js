@@ -88,7 +88,7 @@ export const authStore = create((set, get) => ({
     },
     getCurrentUser: async (userId) => {
         try {
-            const response = await axiosInstance.get(`/auth/user/user-profile`);
+            const response = await axiosInstance.get(`/auth/user-profile`);
             if (response.data.success) {
                 set({ user: response.data.user, isAuthenticated: true });
             } else {
@@ -98,6 +98,29 @@ export const authStore = create((set, get) => ({
             console.error("Error fetching current user:", error);
             set({ user: null, isAuthenticated: false });
         }
+    },
+    updateAssistant: async (assistantImage, assistantName) => {
+        try {
+            const response = await axiosInstance.post(
+                '/auth/updateAssistant',
+                { assistantImage, assistantName },
+                { withCredentials: true }
+            );
+
+            if (response.data.success) {
+                toast.success("Profile updated successfully");
+                set({ user: response.data.user });
+                return true;
+            } else {
+                toast.error(response.data.message || "Failed to update profile");
+                return false;
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            toast.error("Error updating profile");
+            return false;
+        }
     }
+
 }));
 

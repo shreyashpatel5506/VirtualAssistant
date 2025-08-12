@@ -2,14 +2,32 @@ import React, { useState, useContext } from "react";
 import Card from "../components/Card";
 import { UserContext } from "../Context/usercontext";
 import { useNavigate } from "react-router-dom";
-
+import { authStore } from "../storevalues/auth.store.js"
+import { ArrowLeftToLine } from "lucide-react"
 const Customize2 = () => {
     const { selectedAssistant, users } = useContext(UserContext);
     const navigate = useNavigate();
     const [assistantName, setAssistantName] = useState(users?.assistantName || "");
+    const { updateAssistant } = authStore();
+
+    const handleCreateAssistant = async () => {
+        if (!assistantName) {
+            alert("Please enter a name for your assistant.");
+            return;
+        }
+        if (!selectedAssistant) {
+            alert("Please select an assistant.");
+            return;
+        }
+        const result = await updateAssistant(selectedAssistant, assistantName);
+        if (result) {
+            navigate("/home");
+        }
+    };
 
     return (
         <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col justify-center items-center p-6">
+            <ArrowLeftToLine color="#ffffff" className='absolute top-6 left-6 cursor-pointer' onClick={() => navigate(-1)} />
             <h1 className="text-white text-4xl font-bold mb-10 text-center">
                 Customize Your <span className="text-cyan-300">Virtual Assistant</span>
             </h1>
@@ -38,7 +56,7 @@ const Customize2 = () => {
                 {assistantName && (
                     <button
                         className="mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
-                        onClick={() => navigate("/customize2")}
+                        onClick={() => handleCreateAssistant()}
                     >
                         Finally Create Your Assistant
                     </button>
