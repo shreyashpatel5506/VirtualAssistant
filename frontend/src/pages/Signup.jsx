@@ -105,7 +105,7 @@ const Signup = () => {
               />
               <button
                 onClick={handleSendOtp}
-                className="p-3 rounded-full bg-white text-black hover:bg-white transition"
+                className="p-3 rounded-full bg-white hover:bg-white  mt-6 w-full py-4 bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
               >
                 Send OTP
               </button>
@@ -124,7 +124,7 @@ const Signup = () => {
               />
               <button
                 onClick={handleVerifyOtp}
-                className="p-3 rounded-full bg-white text-black hover:bg-white transition"
+                className="p-3 mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all  bg-white  hover:bg-white"
               >
                 Verify OTP
               </button>
@@ -160,7 +160,7 @@ const Signup = () => {
 
               <button
                 onClick={handleSignup}
-                className="p-3 rounded-full bg-white text-black hover:bg-white transition"
+                className="p-3 mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
               >
                 Sign Up
               </button>

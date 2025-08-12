@@ -8,6 +8,7 @@ import { UserContext } from './Context/usercontext' // ✅ import context, not p
 import Customize from './pages/Customize'
 import { Home } from 'lucide-react'
 import React from 'react'
+import Customize2 from './pages/Customize2'
 
 function App() {
   const { users, setUsers } = useContext(UserContext); // ✅ use UserContext
@@ -34,6 +35,7 @@ function App() {
         <Route path="/login" element={!users ? <Login /> : <Home />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/customize" element={users ? <Customize /> : <Login />} />
+        <Route path="/customize2" element={<Customize2 />} />
       </Routes>
     </>
   )

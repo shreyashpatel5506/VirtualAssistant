@@ -9,8 +9,10 @@ import image6 from "../assets/image6.jpeg";
 import image7 from "../assets/image7.jpeg";
 import { ImagePlus } from "lucide-react";
 import { UserContext } from "../Context/usercontext";
+import { useNavigate } from "react-router-dom";
 
 function Customize() {
+    const navigate = useNavigate();
     const { selectedAssistant, setSelectedAssistant } = useContext(UserContext);
     const [uploadedImage, setUploadedImage] = useState(null);
     const inputImageRef = useRef();
@@ -77,8 +79,11 @@ function Customize() {
                 </div>
             </div>
 
-            <button className="mt-4 py-7 px-12 rounded-full bg-white text-black transition">
-                <span className="font-bold text-2xl">Confirm Selection</span>
+            <button
+                className="mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
+                onClick={() => navigate("/customize2")}
+            >
+                Next
             </button>
         </div>
     );

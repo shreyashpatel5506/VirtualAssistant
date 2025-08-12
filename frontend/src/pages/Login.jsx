@@ -90,7 +90,7 @@ const Login = () => {
                         />
                         <button
                             type="button"
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            className="mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all absolute right-3 top-1/2 transform -translate-y-1/2"
                             onClick={() => setShowpassword(!showpassword)}
                         >
                             {showpassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -99,7 +99,7 @@ const Login = () => {
 
                     <button
                         onClick={handleLogin}
-                        className="p-3 rounded-full bg-white text-black hover:bg-white transition"
+                        className="p-3  bg-white hover:bg-white mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
                     >
                         Login
                     </button>
