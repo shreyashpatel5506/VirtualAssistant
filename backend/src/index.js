@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'; // Middleware to parse cookies
 import dotenv from 'dotenv';
 import authRoute from '../routes/auth.route.js';
 import cors from 'cors';
+import geminiResponse from '../gemini.js';
 
 //give cors 
 
@@ -22,20 +23,22 @@ app.use(
     origin: "http://localhost:5173",
     credentials: true,
   })
-); 
+);
 connectMongo();
 
 // Define routes
-app.get('/', (req, res) => {
-    res.send('Welcome to the Virtual Assistant API');
-});
 app.get('/hello', (req, res) => {
-    res.send('Hello, World!');
+  res.send('Welcome to the Virtual Assistant API');
+});
+app.get('/', async (req, res) => {
+  let prompt = req.query.prompt;
+  let data = await geminiResponse(prompt);
+  res.json(data);
 });
 app.use(cookieParser()); // Middleware to parse cookies
 app.use('/api/auth', authRoute); // Use the auth routes
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
 //give cors 
