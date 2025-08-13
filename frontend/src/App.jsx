@@ -6,8 +6,8 @@ import PasswordReset from './pages/passwordReset'
 import { useContext, useState, useEffect } from 'react'
 import { UserContext } from './Context/usercontext' // ✅ import context, not provider
 import Customize from './pages/Customize'
-import { Home } from 'lucide-react'
 import React from 'react'
+import Home from './pages/Home.jsx'
 import Customize2 from './pages/Customize2'
 
 function App() {

@@ -14,6 +14,7 @@ const Home = () => {
             </h1>
         </div>
     )
+    console.log(users?.assistantName, users?.assistantImage);
 }
-console.log(users.assistantName, users.assistantImage);
+
 export default Home

@@ -88,19 +88,23 @@ export const authStore = create((set, get) => ({
             toast.error("Error during password reset");
         }
     },
-    getCurrentUser: async (userId) => {
+    getCurrentUser: async () => {
         try {
             const response = await axiosInstance.get(`/auth/user-profile`);
             if (response.data.success) {
                 set({ user: response.data.user, isAuthenticated: true });
+                return response.data; // <-- return so UserProvider gets it
             } else {
                 set({ user: null, isAuthenticated: false });
+                return null;
             }
         } catch (error) {
             console.error("Error fetching current user:", error);
             set({ user: null, isAuthenticated: false });
+            return null;
         }
     },
+
     updateAssistant: async (assistantImage, assistantName) => {
         try {
             const response = await axiosInstance.post(
