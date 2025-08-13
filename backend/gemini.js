@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const geminiResponse = async (userMessage, assistantName = "Nova", authorName = "Your Name") => {
+const geminiResponse = async (userMessage, assistantName, authorName) => {
   try {
     const apiGemURL = process.env.GEMINI_API_URL || 'https://api.gemini.example.com/v1';
 
@@ -20,7 +20,7 @@ GENERAL BEHAVIOR RULES:
 OUTPUT FORMAT:
 {
   "type": "<intent category>",
-  "userinput": "<processed user request text>",
+  "userinput": "original sentence the user spoke",
   "response": "<short, natural spoken reply>"
 }
 
