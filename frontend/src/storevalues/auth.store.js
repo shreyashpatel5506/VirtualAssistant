@@ -126,6 +126,21 @@ export const authStore = create((set, get) => ({
             toast.error("Error updating profile");
             return false;
         }
+    },
+    logout: async () => {
+        try {
+            const response = await axiosInstance.post('/auth/logout');
+            if (response.data.success) {
+                toast.success("Logout successful");
+                set({ user: null, isAuthenticated: false });
+                localStorage.removeItem('user');
+            } else {
+                toast.error("Logout failed");
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
+            toast.error("Error during logout");
+        }
     }
 
 }));
