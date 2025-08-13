@@ -199,45 +199,55 @@ export const passwordReset = async (req, res) => {
 
 
 export const updateProfile = async (req, res) => {
-    const { assistantName, assistantImage } = req.body; // matching frontend naming
-    const userId = req.user.id; // comes from JWT now
-
-    if (!assistantName || !assistantImage) {
-        return res.status(400).json({ message: "All fields are required", success: false });
-    }
-
-    let finalImage = assistantImage;
-
-    // If file is uploaded, override the image from body
-    if (req.file) {
-        finalImage = await uploadOnCloudinary(req.file);
-    }
-
     try {
-        const user = await User.findByIdAndUpdate(
+        const { assistantName, assistantImage } = req.body;
+        const userId = req.user.id; // now from JWT middleware
+
+        if (!assistantName && !req.file && !assistantImage) {
+            return res.status(400).json({
+                message: "Assistant name and image are required",
+                success: false,
+            });
+        }
+
+        // Start with image from body, will override if file is uploaded
+        let finalImage = assistantImage;
+
+        if (req.file) {
+            const uploaded = await uploadOnCloudinary(req.file);
+            finalImage = uploaded?.url || uploaded; // handle object or string return
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
             userId,
             { assistantName, assistantImage: finalImage },
             { new: true }
         ).select("-password");
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found", success: false });
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
         }
 
         res.status(200).json({
             message: "Profile updated successfully",
             success: true,
             user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                assistantName: user.assistantName,
-                assistantImage: user.assistantImage,
+                id: updatedUser._id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                assistantName: updatedUser.assistantName,
+                assistantImage: updatedUser.assistantImage,
             },
         });
     } catch (error) {
         console.error("Error updating profile:", error);
-        res.status(500).json({ message: "Internal server error", success: false });
+        res.status(500).json({
+            message: "Internal server error",
+            success: false,
+        });
     }
 };
 

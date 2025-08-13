@@ -1,19 +1,27 @@
 // src/Context/usercontext.js
 import React, { useEffect, useState, createContext } from 'react';
+import { authStore } from "../storevalues/auth.store.js";
 
-// Create the context
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-    const [users, setUsers] = useState(null); // Your logged-in user object
-    const [selectedAssistant, setSelectedAssistant] = useState(null); // Stores selected assistant image
+    const [users, setUsers] = useState(null);
+    const [selectedAssistant, setSelectedAssistant] = useState(null);
+    const { getCurrentUser } = authStore();
 
-    // Simulate getting current user (replace with API call)
     const handleCurrentUser = async () => {
-        // Example: fetch from backend
-        // const currentUser = await getUserProfile();
-        const currentUser = null;
-        setUsers(currentUser);
+        try {
+            const response = await getCurrentUser(); // axiosInstance response
+            // If store returns response.data, not axios response, adjust accordingly
+            const currentUser = response?.user || response?.data?.user;
+            if (currentUser) {
+                setUsers(currentUser);
+                localStorage.setItem("user", JSON.stringify(currentUser));
+                console.log("Current user set:", currentUser);
+            }
+        } catch (error) {
+            console.error("Failed to fetch current user:", error);
+        }
     };
 
     useEffect(() => {
@@ -21,12 +29,14 @@ const UserProvider = ({ children }) => {
     }, []);
 
     return (
-        <UserContext.Provider value={{
-            users,
-            setUsers,
-            selectedAssistant,
-            setSelectedAssistant
-        }}>
+        <UserContext.Provider
+            value={{
+                users,
+                setUsers,
+                selectedAssistant,
+                setSelectedAssistant
+            }}
+        >
             {children}
         </UserContext.Provider>
     );

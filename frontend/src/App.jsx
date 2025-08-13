@@ -30,7 +30,7 @@ function App() {
       ></div>
 
       <Routes>
-        <Route path="/" element={(users?.assistantImage && users.assistantName) ? <Home /> : <Customize />} />
+        <Route path="/" element={(users?.assistantName && users?.assistantImage) ? <Home /> : <Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={!users ? <Login /> : <Home />} />
         <Route path="/passwordreset" element={<PasswordReset />} />

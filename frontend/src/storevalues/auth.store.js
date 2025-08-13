@@ -48,6 +48,7 @@ export const authStore = create((set, get) => ({
             const response = await axiosInstance.post('/auth/register', { name, email, password });
             if (response.data.success) {
                 toast.success("Sign up successful");
+                localStorage.setItem('user', JSON.stringify(response.data.user));
                 set({ isSignup: true });
             } else {
                 toast.error("Sign up failed");
@@ -64,6 +65,7 @@ export const authStore = create((set, get) => ({
             if (response.data.success) {
                 toast.success("Login successful");
                 set({ isLogin: true });
+                localStorage.setItem('user', JSON.stringify(response.data.user));
             } else {
                 toast.error("Login failed");
             }
