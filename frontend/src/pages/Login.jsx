@@ -3,12 +3,13 @@ import bg from "../assets/authBg.png";
 import { authStore } from "../storevalues/auth.store.js";
 import { Eye, EyeOff } from 'lucide-react';
 import { UserContext } from "../Context/usercontext.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const { login, isLogin } = authStore();
     const [showpassword, setShowpassword] = useState(false);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
-
+    const navigate = useNavigate();
     const { users, setUsers } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -31,6 +32,7 @@ const Login = () => {
         if (email && password) {
             const result = login(email, password);
             setUsers({ ...users, ...result });
+            navigate('/customize');
         }
     };
 

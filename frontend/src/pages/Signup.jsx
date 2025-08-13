@@ -3,9 +3,11 @@ import bg from "../assets/authBg.png";
 import { Eye, EyeOff, User } from 'lucide-react';
 import { authStore } from "../storevalues/auth.store.js";
 import { UserContext } from './../Context/usercontext';
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const { sendOtp, verifyOtp, signUP, isSendOtp, isVerifyOtp, isSignup } = authStore();
+  const navigate = useNavigate();
   const { users, setUsers } = useContext(UserContext);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -49,6 +51,7 @@ const Signup = () => {
     if (name && email && password) {
       const result = signUP(name, email, password);
       setUsers({ ...users, ...result });
+      navigate('/customize');
     }
   };
 
