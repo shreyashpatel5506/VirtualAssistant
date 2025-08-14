@@ -6,6 +6,7 @@ import { generateToken, verifyToken } from "./token.js"; // Import the token gen
 import User from "../models/user.model.js";
 import uploadOnCloudinary from './../config/cloudinary.js';
 import geminiResponse from "../gemini.js";
+import moment from "moment";
 
 dotenv.config();
 
@@ -284,9 +285,6 @@ export const logout = (req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "Logged out successfully", success: true });
 }
-import moment from "moment";
-import User from "../models/user.model.js";
-import geminiResponse from "../gemini.js";
 
 export const askToAssistant = async (req, res) => {
     try {
