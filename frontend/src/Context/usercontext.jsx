@@ -1,13 +1,14 @@
 // src/Context/usercontext.js
 import React, { useEffect, useState, createContext } from 'react';
 import { authStore } from "../storevalues/auth.store.js";
+import { axios } from 'axios';
 
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
     const [users, setUsers] = useState(null);
     const [selectedAssistant, setSelectedAssistant] = useState(null);
-    const { getCurrentUser } = authStore();
+    const { getCurrentUser, getResponse } = authStore();
 
     const handleCurrentUser = async () => {
         try {
@@ -24,8 +25,17 @@ const UserProvider = ({ children }) => {
         }
     };
 
+    const getGeminiResponse = async (userMessage) => {
+        try {
+            const result = await getResponse();
+        } catch (error) {
+
+        }
+    }
+
     useEffect(() => {
         handleCurrentUser();
+
     }, []);
 
     return (
@@ -34,7 +44,8 @@ const UserProvider = ({ children }) => {
                 users,
                 setUsers,
                 selectedAssistant,
-                setSelectedAssistant
+                setSelectedAssistant,
+                getGeminiResponse
             }}
         >
             {children}

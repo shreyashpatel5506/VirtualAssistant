@@ -141,6 +141,16 @@ export const authStore = create((set, get) => ({
             console.error("Error during logout:", error);
             toast.error("Error during logout");
         }
+    },
+
+    getResponse: async () => {
+        try {
+            const response = await axiosInstance.post('/api/VA/getRespone', { userMessage }, { withCredentials: true })
+            return response.data;
+        } catch (error) {
+            console.log("error surin fetching the result of response ");
+            toast.error("Error during the getting the response");
+        }
     }
 
 }));
