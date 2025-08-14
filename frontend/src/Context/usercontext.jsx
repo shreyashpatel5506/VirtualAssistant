@@ -1,4 +1,3 @@
-// src/Context/usercontext.js
 import React, { useEffect, useState, createContext } from 'react';
 import { authStore } from "../storevalues/auth.store.js";
 
@@ -11,8 +10,7 @@ const UserProvider = ({ children }) => {
 
     const handleCurrentUser = async () => {
         try {
-            const response = await getCurrentUser(); // axiosInstance response
-            // If store returns response.data, not axios response, adjust accordingly
+            const response = await getCurrentUser();
             const currentUser = response?.user || response?.data?.user;
             if (currentUser) {
                 setUsers(currentUser);
@@ -26,15 +24,16 @@ const UserProvider = ({ children }) => {
 
     const getGeminiResponse = async (userMessage) => {
         try {
-            const result = await getResponse();
+            const result = await getResponse(userMessage);
+            console.log("Assistant response:", result);
+            return result;
         } catch (error) {
-
+            console.error("Error getting Gemini response:", error);
         }
-    }
+    };
 
     useEffect(() => {
         handleCurrentUser();
-
     }, []);
 
     return (

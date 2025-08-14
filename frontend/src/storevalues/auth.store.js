@@ -143,15 +143,20 @@ export const authStore = create((set, get) => ({
         }
     },
 
-    getResponse: async () => {
+    getResponse: async (userMessage) => {
         try {
-            const response = await axiosInstance.post('/api/VA/getRespone', { userMessage }, { withCredentials: true })
+            const response = await axiosInstance.post(
+                '/VA/getRespone',
+                { message: userMessage }, // ✅ must match backend "req.body.message"
+                { withCredentials: true }
+            );
             return response.data;
         } catch (error) {
-            console.log("error surin fetching the result of response ");
-            toast.error("Error during the getting the response");
+            console.log("Error fetching the result of response:", error);
+            toast.error("Error while getting assistant response");
         }
-    }
+    },
+
 
 }));
 

@@ -288,7 +288,7 @@ export const logout = (req, res) => {
 
 export const askToAssistant = async (req, res) => {
     try {
-        const user = await User.findById(req.userId);
+        const user = await User.findById(req.user.id);
         const userMessage = req.body.message; // Voice-to-text or typed
         const assistantName = user.assistantName;
         const authorName = user.name;
