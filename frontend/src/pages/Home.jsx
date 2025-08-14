@@ -9,6 +9,48 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            let finalTranscript = '';
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const text = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += text + ' ';
+                    } else {
+                        interimTranscript += text;
+                    }
+                }
+                console.clear();
+                console.log("Final Transcript:", finalTranscript.trim());
+                console.log("Interim Transcript:", interimTranscript);
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    recognition.stop(); // prevent restart loop if mic denied
+                }
+            };
+
+            recognition.onend = () => {
+                console.log("Recognition ended. Restarting...");
+                recognition.start(); // auto-restart for "infinite" listening
+            };
+
+            recognition.start();
+        } else {
+            console.error("SpeechRecognition not supported in this browser.");
+        }
+
         const fetchUser = async () => {
             const response = await getCurrentUser();
             if (response?.user) {
@@ -17,12 +59,14 @@ const Home = () => {
         };
         fetchUser();
     }, []);
+
     const handleLogout = () => {
         logout();
         window.location.reload();
         navigate('/login');
 
     };
+
 
 
     return (

@@ -1,7 +1,6 @@
 // src/Context/usercontext.js
 import React, { useEffect, useState, createContext } from 'react';
 import { authStore } from "../storevalues/auth.store.js";
-import { axios } from 'axios';
 
 export const UserContext = createContext();
 
