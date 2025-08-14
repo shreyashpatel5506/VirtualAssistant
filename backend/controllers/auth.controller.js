@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs"; // Ensure bcrypt is imported correctly
 import { generateToken, verifyToken } from "./token.js"; // Import the token generation function
 import User from "../models/user.model.js";
 import uploadOnCloudinary from './../config/cloudinary.js';
+import geminiResponse from "../gemini.js";
 
 dotenv.config();
 
@@ -284,6 +285,20 @@ export const logout = (req, res) => {
     res.status(200).json({ message: "Logged out successfully", success: true });
 }
 
+export const askToAssistant = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        const userMessage = req.body;
+        const assistantName = user.assistantName;
+        const authorName = user.name;
+        const assistantImage = user.assistantImage;
 
+        const result = await geminiResponse(userMessage, assistantName, authorName);
+
+        const jsonmatch = result.match(/{[\s\s]*}/);
+    } catch (error) {
+
+    }
+}
 
 
