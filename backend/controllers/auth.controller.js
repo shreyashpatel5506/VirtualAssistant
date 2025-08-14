@@ -284,21 +284,269 @@ export const logout = (req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "Logged out successfully", success: true });
 }
+import moment from "moment";
+import User from "../models/user.model.js";
+import geminiResponse from "../gemini.js";
 
 export const askToAssistant = async (req, res) => {
     try {
         const user = await User.findById(req.userId);
-        const userMessage = req.body;
+        const userMessage = req.body.message; // Voice-to-text or typed
         const assistantName = user.assistantName;
         const authorName = user.name;
-        const assistantImage = user.assistantImage;
 
         const result = await geminiResponse(userMessage, assistantName, authorName);
 
-        const jsonmatch = result.match(/{[\s\s]*}/);
-    } catch (error) {
+        const jsonMatch = result.text.match(/{[\s\S]*}/);
+        if (!jsonMatch) {
+            return res.status(200).json({
+                response: "Sorry, I can't understand."
+            });
+        }
 
+        const gemResult = JSON.parse(jsonMatch[0]);
+        const type = gemResult.type;
+
+        switch (type) {
+            /** ===================== GENERAL ===================== **/
+            case "general":
+            case "ai_chat":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== SEARCH & MEDIA ===================== **/
+            case "google_search":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Searching Google for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput)}`
+                });
+
+            case "youtube_search":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Searching YouTube for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent(gemResult.userinput)}`
+                });
+
+            case "youtube_play":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Playing on YouTube: ${gemResult.userinput}`,
+                    actionUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent(gemResult.userinput)}`
+                });
+
+            case "spotify_play":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Playing on Spotify: ${gemResult.userinput}`,
+                    actionUrl: `https://open.spotify.com/search/${encodeURIComponent(gemResult.userinput)}`
+                });
+
+            /** ===================== DATE & TIME ===================== **/
+            case "get_time":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Current time is ${moment().format("HH:mm:ss")}`
+                });
+
+            case "get_date":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Current date is ${moment().format("YYYY-MM-DD")}`
+                });
+
+            case "get_day":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Today is ${moment().format("dddd")}`
+                });
+
+            case "get_month":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Current month is ${moment().format("MMMM")}`
+                });
+
+            /** ===================== TOOLS & APPS ===================== **/
+            case "calculator_open":
+            case "calendar_open":
+            case "notes_open":
+            case "reminder_set":
+            case "alarm_set":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== SOCIAL MEDIA ===================== **/
+            case "instagram_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Opening Instagram",
+                    actionUrl: "https://instagram.com"
+                });
+            case "facebook_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Opening Facebook",
+                    actionUrl: "https://facebook.com"
+                });
+            case "twitter_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Opening Twitter/X",
+                    actionUrl: "https://twitter.com"
+                });
+            case "whatsapp_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Opening WhatsApp",
+                    actionUrl: "https://web.whatsapp.com"
+                });
+            case "telegram_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Opening Telegram",
+                    actionUrl: "https://web.telegram.org"
+                });
+            case "snapchat_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Opening Snapchat",
+                    actionUrl: "https://www.snapchat.com"
+                });
+            case "linkedin_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Opening LinkedIn",
+                    actionUrl: "https://linkedin.com"
+                });
+
+            /** ===================== WEATHER & LOCATION ===================== **/
+            case "weather_show":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Fetching weather for ${gemResult.userinput}`
+                });
+            case "maps_open":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Opening maps for ${gemResult.userinput}`,
+                    actionUrl: `https://www.google.com/maps/search/${encodeURIComponent(gemResult.userinput)}`
+                });
+            case "location_share":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: "Sharing your current location"
+                });
+
+            /** ===================== SPORTS ===================== **/
+            case "live_cricket_score":
+            case "live_football_score":
+            case "sports_news":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== NEWS & ENTERTAINMENT ===================== **/
+            case "news_latest":
+            case "movie_info":
+            case "tv_show_info":
+            case "celebrity_info":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== UTILITIES ===================== **/
+            case "translate_text":
+            case "currency_convert":
+            case "unit_convert":
+            case "system_command":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== FINANCE & BUSINESS ===================== **/
+            case "stock_price":
+            case "crypto_price":
+            case "finance_news":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== TRAVEL & BOOKING ===================== **/
+            case "flight_status":
+            case "book_flight":
+            case "book_hotel":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== COMMUNICATION ===================== **/
+            case "send_email":
+            case "send_sms":
+            case "call_contact":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== AI TOOLS ===================== **/
+            case "ai_image_generate":
+            case "document_summarize":
+            case "code_generate":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response
+                });
+
+            /** ===================== DEFAULT ===================== **/
+            default:
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: gemResult.response || "I’m not sure how to handle that yet."
+                });
+        }
+    } catch (error) {
+        console.error("Error in askToAssistant:", error);
+        res.status(500).json({ error: "Something went wrong" });
     }
-}
+};
 
 
