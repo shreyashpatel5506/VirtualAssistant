@@ -23,4 +23,5 @@ authRoute.post('/password-reset', passwordReset);
 authRoute.post('/updateAssistant', authmiddleware, upload.single("assistantImage"), updateProfile);
 authRoute.get('/user-profile', authmiddleware, getUserProfile);
 authRoute.post('/logout', authmiddleware, logout);
+
 export default authRoute;

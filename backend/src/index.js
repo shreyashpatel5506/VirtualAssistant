@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import authRoute from '../routes/auth.route.js';
 import cors from 'cors';
 import geminiResponse from '../gemini.js';
+import aiRoute from '../routes/geminiRoute.js';
 
 //give cors 
 
@@ -37,6 +38,7 @@ app.get('/', async (req, res) => {
 });
 app.use(cookieParser()); // Middleware to parse cookies
 app.use('/api/auth', authRoute); // Use the auth routes
+app.use('/api/VA', aiRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
