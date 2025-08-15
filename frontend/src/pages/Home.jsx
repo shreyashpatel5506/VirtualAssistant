@@ -9,7 +9,7 @@ const Home = () => {
     const { getCurrentUser, logout } = authStore();
     const navigate = useNavigate();
 
-    // Refs for recognition and state
+    // Refs
     const recognitionRef = useRef(null);
     const silenceTimerRef = useRef(null);
     const transcriptRef = useRef('');
@@ -22,24 +22,21 @@ const Home = () => {
     const [assistantResponse, setAssistantResponse] = useState('');
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [showResponse, setShowResponse] = useState(false);
+    const [userSpeaking, setUserSpeaking] = useState(false);
 
-    // Keep latest function in ref
     useEffect(() => {
         getGeminiResponseRef.current = getGeminiResponse;
     }, [getGeminiResponse]);
 
-    // Fetch current user on load
+    // Fetch user
     useEffect(() => {
         const fetchUser = async () => {
             const response = await getCurrentUser();
-            if (response?.user) {
-                setUsers(response.user);
-            }
+            if (response?.user) setUsers(response.user);
         };
         fetchUser();
     }, []);
 
-    // Init speech recognition object
     const initRecognition = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
@@ -60,6 +57,7 @@ const Home = () => {
             recognitionRef.current.onend = () => {
                 if (!isProcessingRef.current) {
                     setIsListening(false);
+                    setUserSpeaking(false);
                 }
             };
 
@@ -74,8 +72,10 @@ const Home = () => {
 
                 transcriptRef.current = newTranscript;
                 setCommand(transcriptRef.current);
+                setUserSpeaking(true);
 
                 silenceTimerRef.current = setTimeout(() => {
+                    setUserSpeaking(false);
                     const finalTranscript = transcriptRef.current.trim();
                     if (!finalTranscript) return;
 
@@ -87,7 +87,6 @@ const Home = () => {
                     getGeminiResponseRef.current(finalTranscript)
                         .then(response => {
                             if (response) {
-                                console.log("Assistant says:", response.response);
                                 setAssistantResponse(response.response);
                                 setShowResponse(true);
                                 speak(response.response);
@@ -105,17 +104,6 @@ const Home = () => {
                         });
                 }, 1000);
             };
-
-            recognitionRef.current.onerror = (event) => {
-                console.error('Speech recognition error:', event.error);
-                isProcessingRef.current = false;
-                setIsListening(false);
-                if (event.error === 'network') {
-                    setTimeout(() => {
-                        if (isListening) startListening();
-                    }, 1000);
-                }
-            };
         }
     };
 
@@ -123,7 +111,6 @@ const Home = () => {
         initRecognition();
         try {
             recognitionRef.current.start();
-            setIsListening(true);
             setShowResponse(false);
         } catch (err) {
             console.error("Failed to start recognition:", err);
@@ -132,13 +119,12 @@ const Home = () => {
 
     const stopListening = () => {
         try {
-            if (recognitionRef.current) {
-                recognitionRef.current.stop();
-            }
+            recognitionRef.current?.stop();
         } catch (err) {
             console.error("Failed to stop recognition:", err);
         }
         setIsListening(false);
+        setUserSpeaking(false);
     };
 
     const toggleListening = () => {
@@ -156,9 +142,7 @@ const Home = () => {
             setIsSpeaking(false);
             startListening();
         };
-        utterance.onerror = () => {
-            setIsSpeaking(false);
-        };
+        utterance.onerror = () => setIsSpeaking(false);
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(utterance);
     };
@@ -170,27 +154,32 @@ const Home = () => {
 
     return (
         <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col justify-center items-center p-6 relative overflow-hidden">
-            {/* Background animated particles */}
-            <div className="absolute inset-0 overflow-hidden">
-                {[...Array(20)].map((_, i) => (
+
+            {/* 3D floating background effect */}
+            <div className="absolute inset-0 overflow-hidden z-0">
+                {[...Array(25)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute rounded-full bg-blue-500 opacity-20"
+                        className="absolute rounded-full bg-cyan-400 opacity-10 blur-lg"
                         initial={{
                             x: Math.random() * window.innerWidth,
                             y: Math.random() * window.innerHeight,
-                            width: Math.random() * 10 + 5,
-                            height: Math.random() * 10 + 5,
+                            scale: Math.random() * 1.5 + 0.5
                         }}
                         animate={{
-                            x: [null, Math.random() * window.innerWidth],
-                            y: [null, Math.random() * window.innerHeight],
+                            x: Math.random() * window.innerWidth,
+                            y: Math.random() * window.innerHeight,
+                            scale: Math.random() * 1.5 + 0.5
                         }}
                         transition={{
-                            duration: Math.random() * 20 + 10,
+                            duration: Math.random() * 20 + 15,
                             repeat: Infinity,
                             repeatType: "reverse",
-                            ease: "linear",
+                            ease: "easeInOut"
+                        }}
+                        style={{
+                            width: Math.random() * 60 + 30,
+                            height: Math.random() * 60 + 30
                         }}
                     />
                 ))}
@@ -200,35 +189,31 @@ const Home = () => {
                 Welcome to Your Virtual Assistant
             </h1>
 
-            {/* Customize button */}
+            {/* Customize Button */}
             <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="fixed top-4 right-4 p-3 rounded-full pl-6 pr-6 
                 bg-gradient-to-r from-cyan-400 to-blue-500
-                text-black font-bold text-lg shadow-lg
-                hover:shadow-[0_0_20px_rgba(0,255,255,0.7)]
-                transition-all cursor-pointer z-10"
+                text-black font-bold text-lg shadow-lg z-10"
                 onClick={() => navigate('/customize')}
             >
                 Customize Your Assistant
             </motion.button>
 
-            {/* Logout button */}
+            {/* Logout Button */}
             <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="fixed top-22 right-4 p-3 rounded-full pl-6 pr-6
+                className="fixed top-20 right-4 p-3 rounded-full pl-6 pr-6
                 bg-gradient-to-r from-cyan-400 to-blue-500
-                text-black font-bold text-lg shadow-lg
-                hover:shadow-[0_0_20px_rgba(0,255,255,0.7)]
-                transition-all cursor-pointer mt-16 z-10"
+                text-black font-bold text-lg shadow-lg z-10"
                 onClick={handleLogout}
             >
                 Logout
             </motion.button>
 
-            {/* Assistant Avatar with Animation */}
+            {/* Assistant Avatar */}
             <div className="relative z-10 flex flex-col items-center">
                 <motion.div
                     onClick={toggleListening}
@@ -236,54 +221,75 @@ const Home = () => {
                     whileTap={{ scale: 0.95 }}
                     className={`relative rounded-full overflow-hidden cursor-pointer 
                         w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] md:w-[220px] md:h-[220px] lg:w-[250px] lg:h-[250px]
-                        border-4 ${isListening ? 'border-cyan-400' : 'border-blue-500'}`}
-                    animate={{
-                        boxShadow: isListening
-                            ? '0 0 20px rgba(0, 255, 255, 0.7)'
-                            : '0 0 10px rgba(0, 100, 255, 0.5)'
+                        border-4 transition-all`}
+                    style={{
+                        borderColor: isSpeaking
+                            ? '#FFD700'
+                            : isListening
+                                ? '#00FFFF'
+                                : '#555'
                     }}
-                    transition={{ duration: 0.3 }}
                 >
+                    {/* Assistant Image */}
                     <img
                         src={users?.assistantImage}
                         alt="Assistant"
                         className="w-full h-full object-cover rounded-full"
                     />
 
-                    {/* Listening animation */}
-                    {isListening && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="absolute rounded-full bg-cyan-400 opacity-20 animate-ping"
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    animationDuration: '2s'
-                                }}
-                            />
+                    {/* User speaking wave bars */}
+                    {userSpeaking && (
+                        <div className="absolute inset-0 flex items-center justify-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    className="bg-cyan-400 rounded-full"
+                                    style={{ width: 4, height: 20 }}
+                                    animate={{
+                                        height: [20, 40, 20],
+                                    }}
+                                    transition={{
+                                        duration: 0.5,
+                                        repeat: Infinity,
+                                        delay: i * 0.1,
+                                    }}
+                                />
+                            ))}
                         </div>
                     )}
 
-                    {/* Mic icon overlay */}
+                    {/* Assistant speaking wave border */}
+                    {isSpeaking && (
+                        <motion.div
+                            className="absolute inset-0 rounded-full border-4 border-yellow-400"
+                            animate={{
+                                rotate: 360
+                            }}
+                            transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: "linear"
+                            }}
+                            style={{
+                                boxShadow: "0 0 20px rgba(255,215,0,0.6)"
+                            }}
+                        />
+                    )}
+
+                    {/* Mic Icon */}
                     <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 rounded-full p-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
-                            stroke={isListening ? "#ff0000" : "#ffffff"}
+                            stroke={isListening ? "#00FFFF" : "#FFFFFF"}
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         >
-                            {isListening ? (
-                                <>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                    <line x1="6" y1="18" x2="18" y2="6"></line>
-                                </>
-                            ) : (
-                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                            )}
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                             <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                             <line x1="12" y1="19" x2="12" y2="23"></line>
                             <line x1="8" y1="23" x2="16" y2="23"></line>
@@ -291,6 +297,7 @@ const Home = () => {
                     </div>
                 </motion.div>
 
+                {/* Assistant Name */}
                 <h1 className='text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-6'>
                     Hi, I'm {users?.assistantName || 'your assistant'}
                 </h1>
@@ -309,7 +316,7 @@ const Home = () => {
                     )}
                 </AnimatePresence>
 
-                {/* Assistant response */}
+                {/* Assistant Response */}
                 <AnimatePresence>
                     {showResponse && (
                         <motion.div
@@ -319,17 +326,12 @@ const Home = () => {
                             className="mt-4 p-4 bg-blue-900 bg-opacity-50 rounded-lg max-w-md"
                         >
                             <div className="flex items-start">
-                                <div className="flex-shrink-0 mr-3">
-                                    <div className="relative">
-                                        <img
-                                            src={users?.assistantImage}
-                                            alt="Assistant"
-                                            className="w-10 h-10 rounded-full object-cover"
-                                        />
-                                        {isSpeaking && (
-                                            <div className="absolute -inset-1 rounded-full bg-cyan-400 animate-pulse opacity-30"></div>
-                                        )}
-                                    </div>
+                                <div className="flex-shrink-0 mr-3 relative">
+                                    <img
+                                        src={users?.assistantImage}
+                                        alt="Assistant"
+                                        className="w-10 h-10 rounded-full object-cover"
+                                    />
                                 </div>
                                 <div className="text-white">
                                     <p>{assistantResponse}</p>
