@@ -43,7 +43,7 @@ INTENT CATEGORIES AND RULES:
 - "get_month": Current month.
 
 **Tools & Apps**
-- "calculator_open": Open calculator or perform math.
+- "calculator_open": Open calculator on google or perform math.
 - "calendar_open": Show calendar or events.
 - "notes_open": Open or create notes.
 - "reminder_set": Set a reminder.
@@ -57,6 +57,7 @@ INTENT CATEGORIES AND RULES:
 - "telegram_open": Open Telegram.
 - "snapchat_open": Open Snapchat.
 - "linkedin_open": Open LinkedIn.
+- "Youtube_open" : Open Youtube.
 
 **Weather & Location**
 - "weather_show": Show weather for a location.
