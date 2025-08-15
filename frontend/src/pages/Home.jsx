@@ -59,7 +59,7 @@ const Home = () => {
                     .map(result => result[0].transcript)
                     .join('');
 
-                transcriptRef.current = newTranscript; // ✅ fix duplication
+                transcriptRef.current = newTranscript; // ✅ no duplication
 
                 console.log("Current speech:", transcriptRef.current);
 
@@ -74,10 +74,15 @@ const Home = () => {
                         finalTranscript.toLowerCase().includes(assistantNameRef.current.toLowerCase())
                     ) {
                         isProcessingRef.current = true;
+
+                        // stop listening while processing
+                        stopListening();
+
                         getGeminiResponseRef.current(finalTranscript)
                             .then(response => {
                                 if (response) {
                                     console.log("Assistant says:", response.response);
+                                    speak(response.response);
                                     if (response.actionUrl) {
                                         window.open(response.actionUrl, '_blank');
                                     }
@@ -91,7 +96,6 @@ const Home = () => {
                     }
                 }, 500);
             };
-
 
             recognitionRef.current.onerror = (event) => {
                 console.error('Speech recognition error:', event.error);
@@ -130,6 +134,18 @@ const Home = () => {
         } else {
             startListening();
         }
+    };
+
+    const speak = (response) => {
+        const utterance = new SpeechSynthesisUtterance(response);
+
+        // Resume listening after speaking finishes
+        utterance.onend = () => {
+            startListening();
+        };
+
+        window.speechSynthesis.cancel(); // stop any ongoing speech
+        window.speechSynthesis.speak(utterance);
     };
 
     const handleLogout = () => {
