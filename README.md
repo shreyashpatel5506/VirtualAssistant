@@ -321,5 +321,3 @@ Response: Alexa provides a code snippet or helpful explanation, delighting devel
 Prompt: “Alexa, tell me about the history of chess.”
 
 Response: If Alexa doesn’t have a dedicated case, she defaults to a smart Google search, ensuring the user always gets useful information.
-
-✨ Now your README is complete, polished, and visually engaging with emojis — perfect for impressing testers, devs, or even investors.
