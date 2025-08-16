@@ -1,110 +1,325 @@
-# VirtualAssistant
-🧠 Supported Functionalities
-General
-general → Factual or conversational answers.
+🤖 Voice Assistant – Example Prompts & Responses
 
-ai_chat → ChatGPT-style creative and problem-solving conversations.
+This guide shows how users can interact with the assistant (Alexa) and describes the kind of polished, natural responses they will experience. Each case is designed to impress users and make the assistant feel reliable, friendly, and smart.
 
-Search & Media
-google_search → Search on Google.
+🗣️ General & AI Chat
 
-youtube_search → Search on YouTube.
+💬 General conversation
 
-youtube_play → Play videos or songs on YouTube.
+Prompt: “Alexa, how are you?”
 
-spotify_play → Play music on Spotify.
+Response: Alexa answers in a friendly and natural way, making the user feel like they’re talking to a real companion.
 
-Date & Time
-get_time → Current time.
+🤔 AI Chat
 
-get_date → Today's date.
+Prompt: “Alexa, tell me something interesting.”
 
-get_day → Day of the week.
+Response: Alexa provides an engaging, thoughtful reply that feels intelligent and personalized.
 
-get_month → Current month.
+🔎 Search & Media
 
-Tools & Apps
-calculator_open → Open calculator or perform math.
+🌍 Google Search
 
-calendar_open → Show calendar/events.
+Prompt: “Alexa, search Google for space news.”
 
-notes_open → Open or create notes.
+Response: Alexa says she’s searching Google and instantly provides a clickable link, making the user feel empowered with quick access to information.
 
-reminder_set → Set a reminder.
+📺 YouTube Search
 
-alarm_set → Set an alarm.
+Prompt: “Alexa, search YouTube for cooking recipes.”
 
-Social Media
-instagram_open → Open Instagram.
+Response: Alexa confirms and gives a direct YouTube results link, creating a smooth experience for discovering videos.
 
-facebook_open → Open Facebook.
+▶️ YouTube Play
 
-twitter_open → Open Twitter/X.
+Prompt: “Alexa, play Ed Sheeran on YouTube.”
 
-whatsapp_open → Open WhatsApp.
+Response: Alexa responds as if she’s your personal DJ, confirming and providing a YouTube link for instant entertainment.
 
-telegram_open → Open Telegram.
+🎵 Spotify Play
 
-snapchat_open → Open Snapchat.
+Prompt: “Alexa, play Coldplay on Spotify.”
 
-linkedin_open → Open LinkedIn.
+Response: Alexa confirms and provides a Spotify play link, making music playback feel simple and premium.
 
-Weather & Location
-weather_show → Show weather info.
+🕒 Date & Time
 
-maps_open → Open maps/directions.
+⏰ Get Time
 
-location_share → Share current location.
+Prompt: “Alexa, what time is it?”
 
-Sports & Live Updates
-live_cricket_score → Live cricket scores.
+Response: Alexa reads out the exact time, giving users instant clarity.
 
-live_football_score → Live football/soccer scores.
+📅 Get Date
 
-sports_news → Latest sports news.
+Prompt: “Alexa, what’s today’s date?”
 
-News & Entertainment
-news_latest → Latest news.
+Response: Alexa provides the current date in a clear format, leaving no confusion.
 
-movie_info → Movie details.
+📆 Get Day
 
-tv_show_info → TV show details.
+Prompt: “Alexa, what day is it?”
 
-celebrity_info → Celebrity details.
+Response: Alexa answers naturally, e.g. “Today is Monday.” Users feel informed at a glance.
 
-Utilities
-translate_text → Translate between languages.
+🗓️ Get Month
 
-currency_convert → Convert currencies.
+Prompt: “Alexa, what month is it?”
 
-unit_convert → Convert measurement units.
+Response: Alexa responds with the current month, spoken clearly and smoothly.
 
-system_command → Device settings control (volume, brightness, etc.).
+🛠️ Tools & Apps
 
-Finance & Business
-stock_price → Get stock prices.
+🧮 Calculator
 
-crypto_price → Get cryptocurrency prices.
+Prompt: “Alexa, open calculator.”
 
-finance_news → Latest finance updates.
+Response: Alexa confirms by saying the calculator is opening, making everyday tasks feel seamless.
 
-Travel & Booking
-flight_status → Check flight status.
+📖 Calendar
 
-book_flight → Book a flight.
+Prompt: “Alexa, open calendar.”
 
-book_hotel → Book a hotel.
+Response: Alexa affirms that the calendar is opening, keeping users organized.
 
-Communication
-send_email → Send an email.
+📝 Notes
 
-send_sms → Send an SMS.
+Prompt: “Alexa, open notes.”
 
-call_contact → Make a phone call.
+Response: Alexa lets the user know notes are opening, useful for quick thoughts.
 
-AI Tools
-ai_image_generate → Generate AI images.
+⏳ Reminder
 
-document_summarize → Summarize text/documents.
+Prompt: “Alexa, set a reminder for 6 PM.”
 
-code_generate → Write or debug code.
+Response: Alexa confirms the reminder, making task management easy and reliable.
+
+🔔 Alarm
+
+Prompt: “Alexa, set an alarm for 7 AM.”
+
+Response: Alexa assures the alarm is set, giving users peace of mind.
+
+📱 Social Media
+
+📸 Instagram
+
+Prompt: “Alexa, open Instagram.”
+
+Response: Alexa says she’s opening Instagram and provides a direct link. Smooth and instant access.
+
+📘 Facebook
+
+Prompt: “Alexa, open Facebook.”
+
+Response: Alexa responds by confirming and linking to Facebook, making social browsing effortless.
+
+🐦 Twitter/X
+
+Prompt: “Alexa, open Twitter.”
+
+Response: Alexa confirms and provides a Twitter/X link, keeping users connected.
+
+💬 WhatsApp
+
+Prompt: “Alexa, open WhatsApp.”
+
+Response: Alexa assures WhatsApp is opening with a direct link to WhatsApp Web.
+
+✈️ Telegram
+
+Prompt: “Alexa, open Telegram.”
+
+Response: Alexa confirms and links to Telegram Web, offering instant chat access.
+
+👻 Snapchat
+
+Prompt: “Alexa, open Snapchat.”
+
+Response: Alexa confirms with a link to Snapchat, ensuring smooth access to the app.
+
+💼 LinkedIn
+
+Prompt: “Alexa, open LinkedIn.”
+
+Response: Alexa responds with a professional tone, linking directly to LinkedIn.
+
+🌦️ Weather & Location
+
+☁️ Weather
+
+Prompt: “Alexa, what’s the weather in London?”
+
+Response: Alexa confirms and fetches live weather info with a handy link, making users feel updated instantly.
+
+🗺️ Maps
+
+Prompt: “Alexa, show me maps for New York.”
+
+Response: Alexa provides a direct Google Maps link, giving users instant navigation help.
+
+📍 Location Share
+
+Prompt: “Alexa, share my location.”
+
+Response: Alexa says she’s sharing your location, making users feel connected and supported.
+
+🏏 Sports
+
+🏏 Cricket Score
+
+Prompt: “Alexa, cricket score India vs Pakistan.”
+
+Response: Alexa confirms and gives a Google search link for live scores, keeping fans in the loop.
+
+⚽ Football Score
+
+Prompt: “Alexa, football score Barcelona match.”
+
+Response: Alexa replies with live match info and a Google link, making users feel updated in real time.
+
+🏅 Sports News
+
+Prompt: “Alexa, sports news.”
+
+Response: Alexa fetches the latest sports headlines, providing a direct news link.
+
+📰 News & Entertainment
+
+📰 Latest News
+
+Prompt: “Alexa, latest news.”
+
+Response: Alexa says she’s fetching the latest updates, providing a Google News link.
+
+🎬 Movie Info
+
+Prompt: “Alexa, tell me about the movie Inception.”
+
+Response: Alexa searches and provides details with a link, making users feel informed.
+
+📺 TV Show Info
+
+Prompt: “Alexa, tell me about Friends TV show.”
+
+Response: Alexa confirms and shares info with a search link, ensuring quick results.
+
+🌟 Celebrity Info
+
+Prompt: “Alexa, who is Elon Musk?”
+
+Response: Alexa confirms and provides a search link for details, making users feel instantly knowledgeable.
+
+💱 Utilities
+
+🌐 Translate
+
+Prompt: “Alexa, translate hello to Spanish.”
+
+Response: Alexa says she’s translating and gives a Google link, helping users learn quickly.
+
+💱 Currency Convert
+
+Prompt: “Alexa, convert 100 USD to INR.”
+
+Response: Alexa confirms and shows a conversion link, making finance feel easy.
+
+📏 Unit Convert
+
+Prompt: “Alexa, convert 10 km to miles.”
+
+Response: Alexa provides quick results with a search link, boosting productivity.
+
+💻 System Command
+
+Prompt: “Alexa, restart my system.”
+
+Response: Alexa responds with guidance via search link, making even technical tasks accessible.
+
+💹 Finance & Business
+
+📈 Stock Price
+
+Prompt: “Alexa, stock price of Tesla.”
+
+Response: Alexa confirms and provides a link with the live stock price.
+
+🪙 Crypto Price
+
+Prompt: “Alexa, Bitcoin price.”
+
+Response: Alexa fetches crypto details with a live link, impressing users with instant financial insight.
+
+💼 Finance News
+
+Prompt: “Alexa, finance news.”
+
+Response: Alexa provides today’s finance updates and a link, keeping users ahead.
+
+✈️ Travel & Booking
+
+🛫 Flight Status
+
+Prompt: “Alexa, flight status of AI101.”
+
+Response: Alexa confirms and fetches flight details via a link, helping users travel confidently.
+
+🎟️ Book Flight
+
+Prompt: “Alexa, book a flight to Paris.”
+
+Response: Alexa confirms and opens a search for flights, making booking effortless.
+
+🏨 Book Hotel
+
+Prompt: “Alexa, book a hotel in Dubai.”
+
+Response: Alexa provides a search link, making hotel booking quick and stress-free.
+
+📧 Communication
+
+📩 Send Email
+
+Prompt: “Alexa, send an email to John saying hello.”
+
+Response: Alexa confirms the email is being sent, making communication simple.
+
+📱 Send SMS
+
+Prompt: “Alexa, send an SMS to Sarah saying good night.”
+
+Response: Alexa confirms the SMS is being delivered, ensuring reliability.
+
+📞 Call Contact
+
+Prompt: “Alexa, call mom.”
+
+Response: Alexa confirms and initiates the call, creating a hands-free experience.
+
+🎨 AI Tools
+
+🖼️ AI Image Generation
+
+Prompt: “Alexa, generate an image of a sunset over mountains.”
+
+Response: Alexa replies that she’s generating the image and provides a link, amazing users with AI creativity.
+
+📄 Document Summarize
+
+Prompt: “Alexa, summarize this document for me.”
+
+Response: Alexa provides a neat summary, saving time and impressing users with clarity.
+
+💻 Code Generate
+
+Prompt: “Alexa, generate code for a to-do app in Python.”
+
+Response: Alexa provides a code snippet or helpful explanation, delighting developers.
+
+🔄 Default (Fallback)
+
+Prompt: “Alexa, tell me about the history of chess.”
+
+Response: If Alexa doesn’t have a dedicated case, she defaults to a smart Google search, ensuring the user always gets useful information.
+
+✨ Now your README is complete, polished, and visually engaging with emojis — perfect for impressing testers, devs, or even investors.
