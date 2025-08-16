@@ -3,6 +3,7 @@ import { UserContext } from './../Context/usercontext';
 import { authStore } from '../storevalues/auth.store';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import userSpeack from "../assets/user.gif";
 
 const Home = () => {
     const { users, setUsers, getGeminiResponse } = useContext(UserContext);
@@ -155,34 +156,13 @@ const Home = () => {
     return (
         <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col justify-center items-center p-6 relative overflow-hidden">
 
-            {/* 3D floating background effect */}
-            <div className="absolute inset-0 overflow-hidden z-0">
-                {[...Array(25)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute rounded-full bg-cyan-400 opacity-10 blur-lg"
-                        initial={{
-                            x: Math.random() * window.innerWidth,
-                            y: Math.random() * window.innerHeight,
-                            scale: Math.random() * 1.5 + 0.5
-                        }}
-                        animate={{
-                            x: Math.random() * window.innerWidth,
-                            y: Math.random() * window.innerHeight,
-                            scale: Math.random() * 1.5 + 0.5
-                        }}
-                        transition={{
-                            duration: Math.random() * 20 + 15,
-                            repeat: Infinity,
-                            repeatType: "reverse",
-                            ease: "easeInOut"
-                        }}
-                        style={{
-                            width: Math.random() * 60 + 30,
-                            height: Math.random() * 60 + 30
-                        }}
-                    />
-                ))}
+            {/* Bubble GIF background */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="/user.gif" // make sure user.gif is in /public
+                    alt="Bubble Background"
+                    className="w-full h-full object-cover"
+                />
             </div>
 
             <h1 className='text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 z-10'>
@@ -237,6 +217,17 @@ const Home = () => {
                         className="w-full h-full object-cover rounded-full"
                     />
 
+                    {/* Speaking glowing ring overlay */}
+                    {isSpeaking && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <img
+                                src={userSpeack}
+                                alt="Speaking Animation"
+                                className="w-full h-full object-cover rounded-full mix-blend-screen"
+                            />
+                        </div>
+                    )}
+
                     {/* User speaking wave bars */}
                     {userSpeaking && (
                         <div className="absolute inset-0 flex items-center justify-center gap-1">
@@ -245,9 +236,7 @@ const Home = () => {
                                     key={i}
                                     className="bg-cyan-400 rounded-full"
                                     style={{ width: 4, height: 20 }}
-                                    animate={{
-                                        height: [20, 40, 20],
-                                    }}
+                                    animate={{ height: [20, 40, 20] }}
                                     transition={{
                                         duration: 0.5,
                                         repeat: Infinity,
@@ -256,24 +245,6 @@ const Home = () => {
                                 />
                             ))}
                         </div>
-                    )}
-
-                    {/* Assistant speaking wave border */}
-                    {isSpeaking && (
-                        <motion.div
-                            className="absolute inset-0 rounded-full border-4 border-yellow-400"
-                            animate={{
-                                rotate: 360
-                            }}
-                            transition={{
-                                duration: 3,
-                                repeat: Infinity,
-                                ease: "linear"
-                            }}
-                            style={{
-                                boxShadow: "0 0 20px rgba(255,215,0,0.6)"
-                            }}
-                        />
                     )}
 
                     {/* Mic Icon */}
