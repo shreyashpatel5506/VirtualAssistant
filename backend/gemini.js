@@ -65,7 +65,7 @@ INTENT CATEGORIES AND RULES:
 - "location_share": Share current location.
 
 **Sports & Live Updates**
-- "live_cricket_score": Live cricket scores.
+- "live_cricket_score": Live cricket scores search on google.
 - "live_football_score": Live football/soccer scores.
 - "sports_news": Latest sports news.
 

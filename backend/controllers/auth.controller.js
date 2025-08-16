@@ -445,7 +445,8 @@ export const askToAssistant = async (req, res) => {
                 return res.json({
                     type,
                     userInput: gemResult.userinput,
-                    response: `Fetching weather for ${gemResult.userinput}`
+                    response: `Fetching weather for ${gemResult.userinput}`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " weather")}`
                 });
             case "maps_open":
                 return res.json({
@@ -463,23 +464,57 @@ export const askToAssistant = async (req, res) => {
 
             /** ===================== SPORTS ===================== **/
             case "live_cricket_score":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Searching live cricket scores for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " live cricket score")}`
+                });
+
             case "live_football_score":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Searching live football scores for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " live football score")}`
+                });
+
             case "sports_news":
                 return res.json({
                     type,
                     userInput: gemResult.userinput,
-                    response: gemResult.response
+                    response: `Fetching latest sports news for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " sports news")}`
                 });
 
             /** ===================== NEWS & ENTERTAINMENT ===================== **/
             case "news_latest":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Fetching latest news`,
+                    actionUrl: `https://news.google.com`
+                });
             case "movie_info":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Searching movie info for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " movie")}`
+                });
             case "tv_show_info":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Searching TV show info for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " TV show")}`
+                });
             case "celebrity_info":
                 return res.json({
                     type,
                     userInput: gemResult.userinput,
-                    response: gemResult.response
+                    response: `Searching info about "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput)}`
                 });
 
             /** ===================== UTILITIES ===================== **/
@@ -490,17 +525,31 @@ export const askToAssistant = async (req, res) => {
                 return res.json({
                     type,
                     userInput: gemResult.userinput,
-                    response: gemResult.response
+                    response: `Searching for ${type.replace("_", " ")}`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput)}`
                 });
 
             /** ===================== FINANCE & BUSINESS ===================== **/
             case "stock_price":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Fetching stock price for ${gemResult.userinput}`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " stock price")}`
+                });
             case "crypto_price":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Fetching crypto price for ${gemResult.userinput}`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput + " crypto price")}`
+                });
             case "finance_news":
                 return res.json({
                     type,
                     userInput: gemResult.userinput,
-                    response: gemResult.response
+                    response: `Fetching latest finance news`,
+                    actionUrl: `https://www.google.com/search?q=finance news`
                 });
 
             /** ===================== TRAVEL & BOOKING ===================== **/
@@ -510,7 +559,8 @@ export const askToAssistant = async (req, res) => {
                 return res.json({
                     type,
                     userInput: gemResult.userinput,
-                    response: gemResult.response
+                    response: `Searching travel info for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput)}`
                 });
 
             /** ===================== COMMUNICATION ===================== **/
@@ -525,6 +575,14 @@ export const askToAssistant = async (req, res) => {
 
             /** ===================== AI TOOLS ===================== **/
             case "ai_image_generate":
+                return res.json({
+                    type,
+                    userInput: gemResult.userinput,
+                    response: `Generating image for "${gemResult.userinput}"`,
+                    // Example: use DALL·E or any image gen service
+                    actionUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(gemResult.userinput)}`
+                });
+
             case "document_summarize":
             case "code_generate":
                 return res.json({
@@ -533,12 +591,14 @@ export const askToAssistant = async (req, res) => {
                     response: gemResult.response
                 });
 
-            /** ===================== DEFAULT ===================== **/
+
+            /** ===================== DEFAULT (Fallback to Google) ===================== **/
             default:
                 return res.json({
-                    type,
+                    type: "google_search",
                     userInput: gemResult.userinput,
-                    response: gemResult.response || "I’m not sure how to handle that yet."
+                    response: `Searching Google for "${gemResult.userinput}"`,
+                    actionUrl: `https://www.google.com/search?q=${encodeURIComponent(gemResult.userinput)}`
                 });
         }
     } catch (error) {
@@ -546,5 +606,3 @@ export const askToAssistant = async (req, res) => {
         res.status(500).json({ error: "Something went wrong" });
     }
 };
-
-
