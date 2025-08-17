@@ -156,13 +156,29 @@ const Home = () => {
     return (
         <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col justify-center items-center p-6 relative overflow-hidden">
 
-            {/* Bubble GIF background */}
-            <div className="absolute inset-0 z-0">
-                <img
-                    src="/user.gif" // make sure user.gif is in /public
-                    alt="Bubble Background"
-                    className="w-full h-full object-cover"
-                />
+            {/* 3D Bubble Background */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
+                {[...Array(25)].map((_, i) => {
+                    const size = 20 + Math.random() * 60;
+                    const depth = Math.random(); // 0 (far) → 1 (close)
+                    return (
+                        <div
+                            key={i}
+                            className="bubble"
+                            style={{
+                                left: `${Math.random() * 100}%`,
+                                animationDuration: `${6 + Math.random() * 12}s`,
+                                animationDelay: `${Math.random() * 5}s`,
+                                width: `${size}px`,
+                                height: `${size}px`,
+                                zIndex: Math.floor(depth * 10),
+                                filter: `blur(${(1 - depth) * 4}px)`,
+                                opacity: 0.5 + depth * 0.5,
+                                transform: `scale(${0.5 + depth * 1.2})`
+                            }}
+                        />
+                    );
+                })}
             </div>
 
             <h1 className='text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 z-10'>
