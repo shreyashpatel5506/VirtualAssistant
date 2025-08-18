@@ -21,9 +21,32 @@ app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
 }));
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+app.use((req, res, next) => {
+  try { decodeURIComponent(req.path); }
+  catch (err) {
+    console.error("❌ Malformed path (decode failed):", req.url);
+    return res.status(400).send("Malformed URL");
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  const invalidPattern = /\/:[^\w]/;
+  if (invalidPattern.test(req.path)) {
+    console.error("❌ Blocked malformed route pattern:", req.path);
+    return res.status(400).send("Malformed route pattern");
+  }
+  next();
+});
+
+
+
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+// Fix wildcard route to comply with Express v5
+app.get('/*splat', (req, res) => {
+  console.log("⚠️ Wildcard route hit:", req.originalUrl);
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 
