@@ -1,0 +1,12 @@
+{
+  "name": "virtualassistant",
+  "version": "1.0.0",
+  "description": "🤖 Voice Assistant – Example Prompts & Responses",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm start --prefix backend"
+  },
+  "author": "",
+  "license": "ISC"
+}

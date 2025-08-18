@@ -4,7 +4,8 @@
   "description": "Virtuial AI backend full",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.5",
     "nodemon": "^3.1.10",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "virtualassistant": "file:.."
   }
 }

@@ -21,7 +21,10 @@ app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
 }));
-
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
 
 // ===== Middleware =====
 app.use(express.json());
