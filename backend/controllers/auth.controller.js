@@ -74,7 +74,6 @@ export const verifyOTP = (req, res) => {
     return res.status(400).json({ message: "Invalid OTP", success: false });
 };
 
-
 export const signUP = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -91,51 +90,43 @@ export const signUP = async (req, res) => {
         if (!record || !record.verified) {
             return res.status(400).json({ message: "OTP not verified", success: false });
         }
+
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).json({ message: "User already exists", success: false });
         }
 
-        // Hash the password before saving
         if (password.length < 6) {
             return res.status(422).json({ message: "Password must be at least 6 characters", success: false });
         }
 
         const hashedPassword = bcrypt.hashSync(password, 10);
-        const newUser = new User({
-            name,
-            email,
-            password: hashedPassword,
-        });
+        const newUser = new User({ name, email, password: hashedPassword });
 
         const token = generateToken(newUser);
-        await newUser.save()
-        if (record.verified) {
-            otpStorage.delete(email); // Clear OTP after successful signup
-        }
+        await newUser.save();
+
+        if (record.verified) otpStorage.delete(email);
 
         res.cookie("token", token, {
             httpOnly: true,
-            samesite: "strict",
-            secure: false, // Set to true if using HTTPS
-            maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 10 * 24 * 60 * 60 * 1000,
         });
 
         res.status(201).json({
             message: "User registered successfully",
             success: true,
-            user: {
-                id: newUser._id,
-                name: newUser.name,
-                email: newUser.email,
-            },
+            user: { id: newUser._id, name: newUser.name, email: newUser.email },
             token,
         });
     } catch (error) {
         console.error("Error during signup:", error);
         res.status(500).json({ message: "Internal server error", success: false });
     }
-}
+};
+
 
 export const login = async (req, res) => {
     try {
@@ -155,28 +146,25 @@ export const login = async (req, res) => {
         }
 
         const token = generateToken(user);
+
         res.cookie("token", token, {
             httpOnly: true,
-            samesite: "strict",
-            secure: false, // Set to true if using HTTPS
-            maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 10 * 24 * 60 * 60 * 1000,
         });
 
         res.status(200).json({
             message: "Login successful",
             success: true,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-            },
+            user: { id: user._id, name: user.name, email: user.email },
             token,
         });
     } catch (error) {
         console.error("Error during login:", error);
         res.status(500).json({ message: "Internal server error", success: false });
     }
-}
+};
 
 
 export const passwordReset = async (req, res) => {
