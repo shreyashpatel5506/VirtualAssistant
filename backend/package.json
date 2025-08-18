@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Virtuial AI backend full",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"

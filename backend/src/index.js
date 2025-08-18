@@ -26,6 +26,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
+
 // ===== Middleware =====
 app.use(express.json());
 app.use(cookieParser());
