@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 8080;
 const __dirname = path.resolve();
 // ===== CORS =====
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: process.env.url || "http://localhost:5173",
   credentials: true
 }));
 app.use((req, res, next) => {
