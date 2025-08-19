@@ -40,15 +40,15 @@ app.use((req, res, next) => {
 });
 
 
+if (process.env.NODE_ENV == 'production') {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-// Fix wildcard route to comply with Express v5
-app.get('/*splat', (req, res) => {
-  console.log("⚠️ Wildcard route hit:", req.originalUrl);
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
-
+  // Fix wildcard route to comply with Express v5
+  app.get('/*splat', (req, res) => {
+    console.log("⚠️ Wildcard route hit:", req.originalUrl);
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  });
+}
 
 // ===== Middleware =====
 app.use(express.json());
