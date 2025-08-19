@@ -1,13 +1,17 @@
-
-
-
 import axios from 'axios';
 
+const apiBaseUrl =
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.MODE === "development"
+        ? "http://localhost:8080/api"
+        : "/api");
+
 export const axiosInstance = axios.create({
-    baseURL: import.meta.env.MODE === "devlopment" ? "https://localhost:8080/api" : "/api",
+    baseURL: apiBaseUrl,
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: true, // Set a timeout of 10 seconds
+    withCredentials: true,
+    timeout: 10000,
 });
 

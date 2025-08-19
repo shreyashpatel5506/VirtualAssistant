@@ -10,15 +10,14 @@ const uploadOnCloudinary = async (filePath) => {
 
     try {
         const result = await cloudinary.uploader.upload(filePath);
-        fs.unlinkSync(filePath); // Remove the file after upload
+        fs.unlinkSync(filePath);
         return result.secure_url;
     } catch (error) {
-        fs.unlinkSync(filePath); // Ensure the file is removed even if upload fails
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
         console.error("Error uploading to Cloudinary:", error);
-        return resizeBy.status(500).json({
-            message: "Error uploading file"
-        })
-
+        throw error;
     }
 }
 
