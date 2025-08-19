@@ -37,7 +37,13 @@ const Home = () => {
         };
         fetchUser();
     }, []);
+    useEffect(() => {
+        startListening();
 
+        return () => {
+            stopListening();
+        };
+    }, []);
     const initRecognition = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
