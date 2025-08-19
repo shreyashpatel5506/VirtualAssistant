@@ -25,6 +25,37 @@ const Home = () => {
     const [showResponse, setShowResponse] = useState(false);
     const [userSpeaking, setUserSpeaking] = useState(false);
 
+    // Device detection for mobile-specific handling
+    const isMobileDeviceRef = useRef(/Mobi|Android|iP(ad|hone|od)/i.test(navigator.userAgent));
+
+    // Clean up repeated phrases that some mobile browsers emit (e.g., "let's let's open ...")
+    const cleanTranscript = (text) => {
+        const normalized = (text || '').replace(/\s+/g, ' ').trim();
+        if (!isMobileDeviceRef.current) return normalized;
+
+        const words = normalized.split(' ');
+        const result = [];
+        let i = 0;
+        const maxGram = 3; // collapse up to trigram repeats
+        while (i < words.length) {
+            result.push(words[i]);
+            let skipped = false;
+            for (let n = Math.min(maxGram, result.length); n >= 1; n--) {
+                const prev = result.slice(-n).join(' ').toLowerCase();
+                const next = words.slice(i + 1, i + 1 + n).join(' ').toLowerCase();
+                if (prev && prev === next) {
+                    i += n; // skip duplicated n-gram once
+                    skipped = true;
+                    break;
+                }
+            }
+            i += 1;
+        }
+        // Also collapse consecutive duplicate single words (handles let's/let’s)
+        const collapsed = result.join(' ').replace(/\b([\w’']+)(\s+\1\b)+/gi, '$1');
+        return collapsed;
+    };
+
     useEffect(() => {
         getGeminiResponseRef.current = getGeminiResponse;
     }, [getGeminiResponse]);
@@ -54,7 +85,8 @@ const Home = () => {
         if (!recognitionRef.current) {
             recognitionRef.current = new SpeechRecognition();
             recognitionRef.current.continuous = true;
-            recognitionRef.current.interimResults = true;
+            // On mobile, disable interimResults to reduce duplicate phrases
+            recognitionRef.current.interimResults = isMobileDeviceRef.current ? false : true;
             recognitionRef.current.lang = 'en-US';
 
             recognitionRef.current.onstart = () => {
@@ -85,13 +117,14 @@ const Home = () => {
                     setUserSpeaking(false);
                     const finalTranscript = transcriptRef.current.trim();
                     if (!finalTranscript) return;
+                    const processedTranscript = isMobileDeviceRef.current ? cleanTranscript(finalTranscript) : finalTranscript;
 
                     transcriptRef.current = '';
-                    setCommand(finalTranscript);
+                    setCommand(processedTranscript);
                     isProcessingRef.current = true;
                     stopListening();
 
-                    getGeminiResponseRef.current(finalTranscript)
+                    getGeminiResponseRef.current(processedTranscript)
                         .then(response => {
                             if (response) {
                                 setAssistantResponse(response.response);

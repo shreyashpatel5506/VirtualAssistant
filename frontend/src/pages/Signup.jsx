@@ -57,7 +57,7 @@ const Signup = () => {
 
   return (
     <div
-      className="relative w-full h-screen bg-cover flex items-center justify-center"
+      className="relative w-full min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
       style={{
         backgroundImage: `url(${bg})`,
       }}
@@ -66,7 +66,7 @@ const Signup = () => {
 
       {/* Form container */}
       <div
-        className="relative w-full max-w-md bg-white/20 p-8 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-md h-[500px] flex flex-col justify-center gap-4"
+        className="relative w-full max-w-md bg-white/20 p-6 sm:p-8 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-md min-h-[480px] flex flex-col justify-center gap-4 mx-4"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
@@ -94,7 +94,7 @@ const Signup = () => {
 
         {/* Multi-step form */}
         <form className="flex flex-col gap-4 relative z-10">
-          <h1 className="text-2xl font-bold text-white mb-2">Register to VA</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 text-center">Register to VA</h1>
 
           {/* Step 1: Send OTP */}
           {!isSendOtp && (
@@ -108,7 +108,7 @@ const Signup = () => {
               />
               <button
                 onClick={handleSendOtp}
-                className="p-3 rounded-full bg-white hover:bg-white  mt-6 w-full py-4 bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
+                className="p-3 mt-4 sm:mt-6 w-full py-3 sm:py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
               >
                 Send OTP
               </button>
@@ -127,7 +127,7 @@ const Signup = () => {
               />
               <button
                 onClick={handleVerifyOtp}
-                className="p-3 mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all  bg-white  hover:bg-white"
+                className="p-3 mt-4 sm:mt-6 w-full py-3 sm:py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
               >
                 Verify OTP
               </button>
@@ -163,13 +163,13 @@ const Signup = () => {
 
               <button
                 onClick={handleSignup}
-                className="p-3 mt-6 w-full py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
+                className="p-3 mt-4 sm:mt-6 w-full py-3 sm:py-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-lg shadow-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.7)] transition-all"
               >
                 Sign Up
               </button>
             </>
           )}
-          <p className="text-white text-center mt-4">
+          <p className="text-white text-center mt-2 sm:mt-4 text-sm sm:text-base">
             Already have an account? <a href="/login" className="text-cyan-300">Login</a>
           </p>
           {/* Success message */}

@@ -31,14 +31,14 @@ const PasswordReset = () => {
 
     return (
         <div
-            className="relative w-full h-screen bg-cover flex items-center justify-center"
+            className="relative w-full min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
             style={{ backgroundImage: `url(${bg})` }}
         >
 
 
             {/* Form container */}
             <div
-                className="relative w-full max-w-md bg-white/20 p-8 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-md h-[400px] flex flex-col justify-center gap-4"
+                className="relative w-full max-w-md bg-white/20 p-6 sm:p-8 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-md min-h-[380px] sm:h-[400px] flex flex-col justify-center gap-4 mx-4"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={{
@@ -64,7 +64,7 @@ const PasswordReset = () => {
 
                 {/* Form */}
                 <form className="flex flex-col gap-4 relative z-10">
-                    <h1 className="text-2xl font-bold text-white mb-2">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 text-center">
                         Reset Password
                     </h1>
 
@@ -94,7 +94,7 @@ const PasswordReset = () => {
 
                     <button
                         onClick={handleReset}
-                        className="p-3 rounded-full bg-white text-black hover:bg-white transition"
+                        className="p-3 mt-2 sm:mt-4 rounded-full bg-white text-black hover:bg-white transition"
                     >
                         Reset Password
                     </button>
