@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "🤖 Voice Assistant – Example Prompts & Responses",
   "main": "index.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
-    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "build": "npm install --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend",
     "start": "npm start --prefix backend"
   },
   "author": "",
