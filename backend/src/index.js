@@ -76,9 +76,8 @@ if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, "../frontend/dist");
   app.use(express.static(distPath));
 
-  app.get('/*', (req, res) => {
-    // Allow API routes to 404 here rather than serving index
-    if (req.path.startsWith('/api')) return res.status(404).json({ message: 'Not found' });
+  // Serve index.html for all non-API routes (Express v5 compatible)
+  app.get(/^\/(?!api).*/, (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }
