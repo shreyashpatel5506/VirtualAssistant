@@ -15,7 +15,7 @@ const UserProvider = ({ children }) => {
             if (currentUser) {
                 setUsers(currentUser);
                 localStorage.setItem("user", JSON.stringify(currentUser));
-                console.log("Current user set:", currentUser);
+
             }
         } catch (error) {
             console.error("Failed to fetch current user:", error);
@@ -25,7 +25,7 @@ const UserProvider = ({ children }) => {
     const getGeminiResponse = async (userMessage) => {
         try {
             const result = await getResponse(userMessage);
-            console.log("Assistant response:", result);
+
             return result;
         } catch (error) {
             console.error("Error getting Gemini response:", error);
