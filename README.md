@@ -1,4 +1,6 @@
 🎙️ Virtual AI Voice Assistant
+
+
 A modern, browser-based voice + chat assistant powered by AI
 
 Your all-in-one assistant for searching the web, managing tasks, controlling media, checking weather, answering questions, generating images/code, and much more — all through a sleek, powerful web interface.
@@ -303,3 +305,5 @@ MIT License — free for personal and commercial use.
 
 If you like this project, please star the repository ⭐ on GitHub.
 It motivates further updates and helps the project grow!
+
+some gemini api issue project now not working publish in short time
