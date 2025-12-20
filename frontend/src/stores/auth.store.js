@@ -1,7 +1,6 @@
-import { axiosInstance } from '../lib/axiosInstanace.js';
+import { axiosInstance } from '../utils/axiosInstance.js';
 import { create } from "zustand";
 import { toast } from 'react-hot-toast';
-
 
 export const authStore = create((set, get) => ({
     user: null,
@@ -49,6 +48,10 @@ export const authStore = create((set, get) => ({
             if (response.data.success) {
                 toast.success("Sign up successful");
                 localStorage.setItem('user', JSON.stringify(response.data.user));
+                // Store token in localStorage as fallback for Authorization header
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
                 set({ isSignup: true });
             } else {
                 toast.error("Sign up failed");
@@ -64,8 +67,12 @@ export const authStore = create((set, get) => ({
             const response = await axiosInstance.post('/auth/login', { email, password });
             if (response.data.success) {
                 toast.success("Login successful");
-                set({ isLogin: true });
                 localStorage.setItem('user', JSON.stringify(response.data.user));
+                // Store token in localStorage as fallback for Authorization header
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
+                set({ isLogin: true });
             } else {
                 toast.error("Login failed");
             }
@@ -88,12 +95,13 @@ export const authStore = create((set, get) => ({
             toast.error("Error during password reset");
         }
     },
+
     getCurrentUser: async () => {
         try {
             const response = await axiosInstance.get(`/auth/user-profile`);
             if (response.data.success) {
                 set({ user: response.data.user, isAuthenticated: true });
-                return response.data; // <-- return so UserProvider gets it
+                return response.data;
             } else {
                 set({ user: null, isAuthenticated: false });
                 return null;
@@ -127,6 +135,7 @@ export const authStore = create((set, get) => ({
             return false;
         }
     },
+
     logout: async () => {
         try {
             const response = await axiosInstance.post('/auth/logout');
@@ -134,12 +143,16 @@ export const authStore = create((set, get) => ({
                 toast.success("Logout successful");
                 set({ user: null, isAuthenticated: false });
                 localStorage.removeItem('user');
+                localStorage.removeItem('token');
             } else {
                 toast.error("Logout failed");
             }
         } catch (error) {
             console.error("Error during logout:", error);
             toast.error("Error during logout");
+            // Clear local storage even if request fails
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         }
     },
 
@@ -147,16 +160,14 @@ export const authStore = create((set, get) => ({
         try {
             const response = await axiosInstance.post(
                 '/VA/getRespone',
-                { message: userMessage }, // ✅ must match backend "req.body.message"
+                { message: userMessage },
                 { withCredentials: true }
             );
             return response.data;
         } catch (error) {
-            console.log("Error fetching the result of response:", error);
+            console.error("Error fetching the result of response:", error);
             toast.error("Error while getting assistant response");
         }
     },
-
-
 }));
 

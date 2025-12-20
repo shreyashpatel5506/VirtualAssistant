@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import bg from "../assets/authBg.png";
-import { authStore } from "../storevalues/auth.store.js";
+import { authStore } from "../stores/auth.store.js";
 import { Eye, EyeOff } from 'lucide-react';
 
 const PasswordReset = () => {

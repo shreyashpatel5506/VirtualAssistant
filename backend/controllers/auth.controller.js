@@ -1,18 +1,17 @@
 import dns from "dns/promises";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs"; // Ensure bcrypt is imported correctly
-import { generateToken, verifyToken } from "./token.js"; // Import the token generation function
+import bcrypt from "bcryptjs";
+import { generateToken, verifyToken } from "./token.js";
 import User from "../models/user.model.js";
 import uploadOnCloudinary from './../config/cloudinary.js';
 import geminiResponse from "../gemini.js";
 import moment from "moment";
-
 import axios from "axios";
+
 dotenv.config();
 
-
-
+// Email configuration for OTP
 const mailUser = process.env.MY_MAIL;
 const mailPassword = process.env.MY_PASSWORD;
 
@@ -24,6 +23,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// In-memory OTP storage (consider using Redis for production)
 const otpStorage = new Map();
 
 export const sendOtp = async (req, res) => {
@@ -110,7 +110,7 @@ export const signUP = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             secure: process.env.NODE_ENV === "production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
         });
@@ -149,7 +149,7 @@ export const login = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             secure: process.env.NODE_ENV === "production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
         });
@@ -277,8 +277,10 @@ export const logout = (req, res) => {
 
 
 /**
- * Helper → Call external doc generation API (e.g. APITemplate.io)
- * Instead of saving files on backend.
+ * Helper function to generate documents using external API (e.g. APITemplate.io)
+ * Used for code generation and document summarization features
+ * @param {string} content - Content to generate document from
+ * @returns {string|null} - URL of generated document or null if failed
  */
 const generateDocWithAPI = async (content) => {
     try {
@@ -303,6 +305,10 @@ const generateDocWithAPI = async (content) => {
     }
 };
 
+/**
+ * Main assistant handler - processes user messages and returns appropriate responses
+ * Uses Gemini AI to determine intent and generate structured responses
+ */
 export const askToAssistant = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);

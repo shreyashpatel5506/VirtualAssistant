@@ -1,6 +1,12 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 
+/**
+ * Uploads file to Cloudinary and returns secure URL
+ * Deletes local file after successful upload
+ * @param {string} filePath - Local file path to upload
+ * @returns {string} - Cloudinary secure URL
+ */
 const uploadOnCloudinary = async (filePath) => {
     cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

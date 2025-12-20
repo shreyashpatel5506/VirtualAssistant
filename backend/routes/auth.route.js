@@ -9,19 +9,21 @@ import {
     logout,
     passwordReset
 } from "../controllers/auth.controller.js";
-import { authmiddleware } from '../middlewear/auth.middlewear.js';
-import upload from '../middlewear/multer.js';
-
+import { authMiddleware } from '../middleware/auth.middleware.js';
+import upload from '../middleware/multer.js';
 
 const authRoute = express.Router();
 
+// Public routes (no authentication required)
 authRoute.post('/send-otp', sendOtp);
 authRoute.post('/verify-otp', verifyOTP);
 authRoute.post('/register', signUP);
 authRoute.post('/login', login);
 authRoute.post('/password-reset', passwordReset);
-authRoute.post('/updateAssistant', authmiddleware, upload.single("assistantImage"), updateProfile);
-authRoute.get('/user-profile', authmiddleware, getUserProfile);
-authRoute.post('/logout', authmiddleware, logout);
+
+// Protected routes (require authentication)
+authRoute.post('/updateAssistant', authMiddleware, upload.single("assistantImage"), updateProfile);
+authRoute.get('/user-profile', authMiddleware, getUserProfile);
+authRoute.post('/logout', authMiddleware, logout);
 
 export default authRoute;

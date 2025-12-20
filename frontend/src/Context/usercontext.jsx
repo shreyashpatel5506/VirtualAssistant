@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createContext } from 'react';
-import { authStore } from "../storevalues/auth.store.js";
+import { authStore } from "../stores/auth.store.js";
 
 export const UserContext = createContext();
 

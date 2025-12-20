@@ -19,3 +19,18 @@ export const axiosInstance = axios.create({
     timeout: 10000,
 });
 
+// Request interceptor to add token from localStorage to Authorization header
+axiosInstance.interceptors.request.use(
+    (config) => {
+        // Get token from localStorage (stored during login/signup)
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+

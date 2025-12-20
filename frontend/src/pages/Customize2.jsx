@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import Card from "../components/Card";
 import { UserContext } from "../Context/usercontext";
 import { useNavigate } from "react-router-dom";
-import { authStore } from "../storevalues/auth.store.js";
+import { authStore } from "../stores/auth.store.js";
 import { ArrowLeftToLine } from "lucide-react";
 
 const Customize2 = () => {

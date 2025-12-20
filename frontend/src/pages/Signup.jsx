@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import bg from "../assets/authBg.png";
 import { Eye, EyeOff, User } from 'lucide-react';
-import { authStore } from "../storevalues/auth.store.js";
+import { authStore } from "../stores/auth.store.js";
 import { UserContext } from './../Context/usercontext';
 import { useNavigate } from "react-router-dom";
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from './../Context/usercontext';
-import { authStore } from '../storevalues/auth.store';
+import { authStore } from '../stores/auth.store';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import userSpeack from "../assets/user.gif";

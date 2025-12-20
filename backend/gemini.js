@@ -112,10 +112,14 @@ USER MESSAGE:
 `;
 
     const result = await axios.post(apiGemURL, {
-      "contents": {
-        "parts": [
-          { "text": fullPrompt }
+      contents: [{
+        parts: [
+          { text: fullPrompt }
         ]
+      }]
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
       }
     });
 

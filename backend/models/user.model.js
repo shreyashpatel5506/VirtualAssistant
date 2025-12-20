@@ -19,12 +19,10 @@ const userSchema = new mongoose.Schema({
     },
     assistantName: {
         type: String,
-
         trim: true,
     },
     assistantImage: {
         type: String,
-
     },
     history: [{
         type: String,
