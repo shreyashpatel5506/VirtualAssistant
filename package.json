@@ -1,5 +1,5 @@
 {
-  "name": "virtualassistant",
+  "name": "virtualassistant-voice based",
   "version": "1.0.0",
   "description": "🤖 Voice Assistant – Example Prompts & Responses",
   "main": "index.js",
