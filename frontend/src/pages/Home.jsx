@@ -189,7 +189,8 @@ const Home = () => {
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        localStorage.clear();
+                window.location.href = "/login";
     };
 
     return (
