@@ -1,110 +1,69 @@
 import dns from "dns/promises";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
-import { generateToken, verifyToken } from "./token.js";
+import bcrypt from "bcryptjs"; // Ensure bcrypt is imported correctly
+import { generateToken, verifyToken } from "./token.js"; // Import the token generation function
 import User from "../models/user.model.js";
 import uploadOnCloudinary from './../config/cloudinary.js';
 import geminiResponse from "../gemini.js";
 import moment from "moment";
-import axios from "axios";
 
+import axios from "axios";
 dotenv.config();
 
-// Email configuration for OTP
+
+
 const mailUser = process.env.MY_MAIL;
 const mailPassword = process.env.MY_PASSWORD;
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // Must be false for 587
     auth: {
         user: mailUser,
         pass: mailPassword,
     },
-    tls: {
-        // Essential for cloud hosting environments
-        rejectUnauthorized: false
-    },
-    // Increased timeouts for Render's network latency
-    connectionTimeout: 40000, 
-    greetingTimeout: 40000,
-    socketTimeout: 40000,
 });
 
-// In-memory OTP storage (consider using Redis for production)
 const otpStorage = new Map();
 
 export const sendOtp = async (req, res) => {
     const { email } = req.body;
-    
-    // 1. Basic Validation
-    if (!email) {
-        return res.status(400).json({ message: "Email is required", success: false });
-    }
+    if (!email) return res.status(400).json({ message: "Email is required", success: false });
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return res.status(422).json({ message: "Invalid email format", success: false });
-    }
+    if (!emailRegex.test(email)) return res.status(422).json({ message: "Invalid email format", success: false });
 
     try {
-        // 2. DNS Check (Survive cold starts by putting it inside try-catch)
         const domain = email.split("@")[1];
-        try {
-            const mxRecords = await dns.resolveMx(domain);
-            if (!mxRecords || mxRecords.length === 0) {
-                return res.status(452).json({ message: "Email domain does not accept mail", success: false });
-            }
-        } catch (dnsError) {
-            // DNS resolution fail hone par turant return karein
-            return res.status(452).json({ message: "Invalid or unreachable email domain", success: false });
+        const mxRecords = await dns.resolveMx(domain);
+        if (!mxRecords || mxRecords.length === 0) {
+            return res.status(452).json({ message: "Email domain does not accept mail", success: false });
         }
+    } catch (dnsError) {
+        return res.status(452).json({ message: "Invalid or unreachable email domain", success: false });
+    }
 
-        // 3. Generate OTP
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        
-        const mailOptions = {
-            from: `Virtual <${mailUser}>`,
-            to: email,
-            subject: "🔐 Your Virtual OTP Code",
-            html: `
-                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee">
-                    <h2>Your OTP Code</h2>
-                    <p style="font-size: 20px; font-weight: bold; color: #4A90E2;">${otp}</p>
-                    <p>This code is valid for 10 minutes.</p>
-                </div>
-            `
-        };
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const mailOptions = {
+        from: `Virtual <${mailUser}>`,
+        to: email,
+        subject: "🔐 Your Virtual OTP Code",
+        html: `Your OTP code is: <strong>${otp}</strong> (valid for 10 minutes)`
+    };
 
-        // 4. Send Email with internal timeout check
-        // Hum await ka use kar rahe hain, nodemailer automatically respond karega
+    try {
         const info = await transporter.sendMail(mailOptions);
-
         if (info.accepted.includes(email)) {
-            // Memory storage mein save karein
-            otpStorage.set(email, { otp, verified: false, timestamp: Date.now() });
-            
-            // Success response (Ab Axios timeout nahi karega)
-            return res.status(200).json({ 
-                message: "OTP sent successfully", 
-                success: true 
-            });
+            otpStorage.set(email, { otp, verified: false });
+            return res.status(200).json({ message: "OTP sent", success: true });
         } else {
-            return res.status(452).json({ message: "Email was not accepted by the provider", success: false });
+            return res.status(452).json({ message: "SMTP did not accept the email", success: false });
         }
-
     } catch (err) {
-        console.error("OTP Error:", err);
-        // Generic error response taaki frontend hang na ho
-        return res.status(500).json({ 
-            message: "Failed to send email. Please try again later.", 
-            success: false 
-        });
+        return res.status(502).json({ message: "Failed to send email", success: false });
     }
 };
+
 export const verifyOTP = (req, res) => {
     const { email, otp } = req.body;
     const record = otpStorage.get(email);
@@ -151,7 +110,7 @@ export const signUP = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             secure: process.env.NODE_ENV === "production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
         });
@@ -190,7 +149,7 @@ export const login = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             secure: process.env.NODE_ENV === "production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
         });
@@ -318,10 +277,8 @@ export const logout = (req, res) => {
 
 
 /**
- * Helper function to generate documents using external API (e.g. APITemplate.io)
- * Used for code generation and document summarization features
- * @param {string} content - Content to generate document from
- * @returns {string|null} - URL of generated document or null if failed
+ * Helper → Call external doc generation API (e.g. APITemplate.io)
+ * Instead of saving files on backend.
  */
 const generateDocWithAPI = async (content) => {
     try {
@@ -346,10 +303,6 @@ const generateDocWithAPI = async (content) => {
     }
 };
 
-/**
- * Main assistant handler - processes user messages and returns appropriate responses
- * Uses Gemini AI to determine intent and generate structured responses
- */
 export const askToAssistant = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
