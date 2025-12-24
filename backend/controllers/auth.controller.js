@@ -28,42 +28,72 @@ const otpStorage = new Map();
 
 export const sendOtp = async (req, res) => {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required", success: false });
+    
+    // 1. Basic Validation
+    if (!email) {
+        return res.status(400).json({ message: "Email is required", success: false });
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return res.status(422).json({ message: "Invalid email format", success: false });
-
-    try {
-        const domain = email.split("@")[1];
-        const mxRecords = await dns.resolveMx(domain);
-        if (!mxRecords || mxRecords.length === 0) {
-            return res.status(452).json({ message: "Email domain does not accept mail", success: false });
-        }
-    } catch (dnsError) {
-        return res.status(452).json({ message: "Invalid or unreachable email domain", success: false });
+    if (!emailRegex.test(email)) {
+        return res.status(422).json({ message: "Invalid email format", success: false });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const mailOptions = {
-        from: `Virtual <${mailUser}>`,
-        to: email,
-        subject: "🔐 Your Virtual OTP Code",
-        html: `Your OTP code is: <strong>${otp}</strong> (valid for 10 minutes)`
-    };
-
     try {
-        const info = await transporter.sendMail(mailOptions);
-        if (info.accepted.includes(email)) {
-            otpStorage.set(email, { otp, verified: false });
-            return res.status(200).json({ message: "OTP sent", success: true });
-        } else {
-            return res.status(452).json({ message: "SMTP did not accept the email", success: false });
+        // 2. DNS Check (Survive cold starts by putting it inside try-catch)
+        const domain = email.split("@")[1];
+        try {
+            const mxRecords = await dns.resolveMx(domain);
+            if (!mxRecords || mxRecords.length === 0) {
+                return res.status(452).json({ message: "Email domain does not accept mail", success: false });
+            }
+        } catch (dnsError) {
+            // DNS resolution fail hone par turant return karein
+            return res.status(452).json({ message: "Invalid or unreachable email domain", success: false });
         }
+
+        // 3. Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        const mailOptions = {
+            from: `Virtual <${mailUser}>`,
+            to: email,
+            subject: "🔐 Your Virtual OTP Code",
+            html: `
+                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee">
+                    <h2>Your OTP Code</h2>
+                    <p style="font-size: 20px; font-weight: bold; color: #4A90E2;">${otp}</p>
+                    <p>This code is valid for 10 minutes.</p>
+                </div>
+            `
+        };
+
+        // 4. Send Email with internal timeout check
+        // Hum await ka use kar rahe hain, nodemailer automatically respond karega
+        const info = await transporter.sendMail(mailOptions);
+
+        if (info.accepted.includes(email)) {
+            // Memory storage mein save karein
+            otpStorage.set(email, { otp, verified: false, timestamp: Date.now() });
+            
+            // Success response (Ab Axios timeout nahi karega)
+            return res.status(200).json({ 
+                message: "OTP sent successfully", 
+                success: true 
+            });
+        } else {
+            return res.status(452).json({ message: "Email was not accepted by the provider", success: false });
+        }
+
     } catch (err) {
-        return res.status(502).json({ message: "Failed to send email", success: false });
+        console.error("OTP Error:", err);
+        // Generic error response taaki frontend hang na ho
+        return res.status(500).json({ 
+            message: "Failed to send email. Please try again later.", 
+            success: false 
+        });
     }
 };
-
 export const verifyOTP = (req, res) => {
     const { email, otp } = req.body;
     const record = otpStorage.get(email);
