@@ -7,30 +7,10 @@ import User from "../models/user.model.js";
 import uploadOnCloudinary from './../config/cloudinary.js';
 import geminiResponse from "../gemini.js";
 import moment from "moment";
-
 import axios from "axios";
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false, // MUST be false for 587
-  auth: {
-    user: "apikey", // 🔥 HARDCODED (important)
-    pass: process.env.BREVO_SMTP_KEY,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
-
-transporter.verify((err) => {
-  if (err) {
-    console.error("❌ SMTP VERIFY FAILED:", err.message);
-  } else {
-    console.log("✅ SMTP READY");
-  }
-});
+import axios from "axios";
 
 const otpStorage = new Map();
 
@@ -47,19 +27,29 @@ export const sendOtp = async (req, res) => {
       return res.status(422).json({ message: "Invalid email format", success: false });
     }
 
-    
-
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-await transporter.sendMail({
-  from: `"Virtual Assistant" <${process.env.BREVO_SENDER}>`,
-  to: email,
-  subject: "🔐 Your OTP Code",
-  html: `
-    <h2>Your OTP is ${otp}</h2>
-    <p>This OTP is valid for 10 minutes.</p>
-  `,
-});
 
+    await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      {
+        sender: {
+          email: process.env.BREVO_SENDER,
+          name: "Virtual Assistant",
+        },
+        to: [{ email }],
+        subject: "🔐 Your OTP Code",
+        htmlContent: `
+          <h2>Your OTP is ${otp}</h2>
+          <p>This OTP is valid for 10 minutes.</p>
+        `,
+      },
+      {
+        headers: {
+          "api-key": process.env.BREVO_API_KEY,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     otpStorage.set(email, {
       otp,
@@ -69,12 +59,10 @@ await transporter.sendMail({
     return res.status(200).json({ message: "OTP sent", success: true });
 
   } catch (error) {
-    console.error("Send OTP error:", error);
+    console.error("Brevo API OTP error:", error?.response?.data || error.message);
     return res.status(500).json({ message: "Failed to send OTP", success: false });
   }
 };
-
-
 
 export const verifyOTP = (req, res) => {
     const { email, otp } = req.body;
