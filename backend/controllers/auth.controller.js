@@ -12,15 +12,18 @@ import axios from "axios";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: false, // TLS auto-handled
-   requireTLS: false,   
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false, // MUST be false for 587
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env.BREVO_SMTP_USER, // "apikey"
+    pass: process.env.BREVO_SMTP_KEY,  // real SMTP key
+  },
+  tls: {
+    rejectUnauthorized: true,
   },
 });
+
 
 
 const otpStorage = new Map();
@@ -41,13 +44,16 @@ export const sendOtp = async (req, res) => {
     
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+await transporter.sendMail({
+  from: `"Virtual Assistant" <${process.env.BREVO_SENDER}>`,
+  to: email,
+  subject: "🔐 Your OTP Code",
+  html: `
+    <h2>Your OTP is ${otp}</h2>
+    <p>This OTP is valid for 10 minutes.</p>
+  `,
+});
 
-    await transporter.sendMail({
-      from: "Virtual <no-reply@yourdomain.com>",
-      to: email,
-      subject: "🔐 Your OTP Code",
-      html: `<h2>Your OTP is ${otp}</h2><p>Valid for 10 minutes</p>`,
-    });
 
     otpStorage.set(email, {
       otp,
