@@ -14,8 +14,6 @@ dotenv.config();
 // Email configuration for OTP
 const mailUser = process.env.MY_MAIL;
 const mailPassword = process.env.MY_PASSWORD;
-const mailUser = process.env.MY_MAIL;
-const mailPassword = process.env.MY_PASSWORD; // Ensure no spaces here
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
