@@ -1,0 +1,10 @@
+name: UI Change
+title: "[UI]: "
+labels: ["ui"]
+body:
+  - type: textarea
+    attributes:
+      label: Which UI part needs improvement?
+  - type: textarea
+    attributes:
+      label: Expected design or behavior

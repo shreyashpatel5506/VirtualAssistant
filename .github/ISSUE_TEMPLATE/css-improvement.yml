@@ -1,0 +1,7 @@
+name: CSS Improvement
+title: "[CSS]: "
+labels: ["css"]
+body:
+  - type: textarea
+    attributes:
+      label: Styling issue

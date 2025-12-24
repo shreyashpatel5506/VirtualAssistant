@@ -1,0 +1,10 @@
+name: Page Update
+title: "[Page]: "
+labels: ["page"]
+body:
+  - type: textarea
+    attributes:
+      label: Which page?
+  - type: textarea
+    attributes:
+      label: What change is required?
