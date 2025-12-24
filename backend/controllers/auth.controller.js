@@ -11,58 +11,63 @@ import moment from "moment";
 import axios from "axios";
 dotenv.config();
 
-
-
-const mailUser = process.env.MY_MAIL;
-const mailPassword = process.env.MY_PASSWORD;
-
 const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: mailUser,
-        pass: mailPassword,
-    },
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: false, // TLS auto-handled
+   requireTLS: false,   
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
 });
+
 
 const otpStorage = new Map();
 
 export const sendOtp = async (req, res) => {
+  try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required", success: false });
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required", success: false });
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return res.status(422).json({ message: "Invalid email format", success: false });
+    if (!emailRegex.test(email)) {
+      return res.status(422).json({ message: "Invalid email format", success: false });
+    }
 
-    try {
-        const domain = email.split("@")[1];
-        const mxRecords = await dns.resolveMx(domain);
-        if (!mxRecords || mxRecords.length === 0) {
-            return res.status(452).json({ message: "Email domain does not accept mail", success: false });
-        }
-    } catch (dnsError) {
-        return res.status(452).json({ message: "Invalid or unreachable email domain", success: false });
+    // MX check
+    const domain = email.split("@")[1];
+    const mxRecords = await dns.resolveMx(domain);
+    if (!mxRecords.length) {
+      return res.status(422).json({ message: "Email domain does not accept mail", success: false });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const mailOptions = {
-        from: `Virtual <${mailUser}>`,
-        to: email,
-        subject: "🔐 Your Virtual OTP Code",
-        html: `Your OTP code is: <strong>${otp}</strong> (valid for 10 minutes)`
-    };
 
-    try {
-        const info = await transporter.sendMail(mailOptions);
-        if (info.accepted.includes(email)) {
-            otpStorage.set(email, { otp, verified: false });
-            return res.status(200).json({ message: "OTP sent", success: true });
-        } else {
-            return res.status(452).json({ message: "SMTP did not accept the email", success: false });
-        }
-    } catch (err) {
-        return res.status(502).json({ message: "Failed to send email", success: false });
-    }
+    await transporter.sendMail({
+      from: "Virtual <no-reply@yourdomain.com>",
+      to: email,
+      subject: "🔐 Your OTP Code",
+      html: `<h2>Your OTP is ${otp}</h2><p>Valid for 10 minutes</p>`,
+    });
+
+    otpStorage.set(email, {
+      otp,
+      expiresAt: Date.now() + 10 * 60 * 1000,
+    });
+
+    return res.status(200).json({ message: "OTP sent", success: true });
+
+  } catch (error) {
+    console.error("Send OTP error:", error);
+    return res.status(500).json({ message: "Failed to send OTP", success: false });
+  }
 };
+
+
 
 export const verifyOTP = (req, res) => {
     const { email, otp } = req.body;

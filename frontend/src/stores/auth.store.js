@@ -19,6 +19,7 @@ export const authStore = create((set, get) => ({
                 toast.success("OTP sent successfully");
                 set({ isSendOtp: true });
             } else {
+                console.log("failed to send otp")
                 toast.error("Failed to send OTP");
             }
         } catch (error) {
