@@ -16,6 +16,7 @@ const mailUser = process.env.MY_MAIL;
 const mailPassword = process.env.MY_PASSWORD;
 
 const transporter = nodemailer.createTransport({
+    service: "gmail",
     host: "smtp.gmail.com",
     port: 465,               // SSL Port (Render friendly)
     secure: true,            // Port 465 ke liye true hona chahiye
@@ -24,9 +25,9 @@ const transporter = nodemailer.createTransport({
         pass: mailPassword,  // Aapka 16-digit App Password
     },
     // Yeh settings connection ko hang hone se rokengi
-    connectionTimeout: 20000, // 20 seconds
-    greetingTimeout: 20000,
-    socketTimeout: 20000,
+    connectionTimeout: 30000, // 20 seconds
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
 });
 
 // In-memory OTP storage (consider using Redis for production)
