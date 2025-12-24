@@ -1,10 +1,19 @@
 name: UI Change
+description: Suggest a UI improvement or visual change
 title: "[UI]: "
 labels: ["ui"]
+
 body:
   - type: textarea
     attributes:
       label: Which UI part needs improvement?
+      placeholder: Navbar, Chat sidebar, Message list, etc.
+    validations:
+      required: true
+
   - type: textarea
     attributes:
       label: Expected design or behavior
+      placeholder: Describe the expected UI change
+    validations:
+      required: true

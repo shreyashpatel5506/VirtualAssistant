@@ -1,7 +1,19 @@
 name: CSS Improvement
+description: Improve styling, layout, or responsiveness
 title: "[CSS]: "
 labels: ["css"]
+
 body:
   - type: textarea
     attributes:
-      label: Styling issue
+      label: Describe the CSS issue
+      placeholder: Alignment issue, color problem, spacing, responsiveness, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected improvement
+      placeholder: How should the styling look after the fix?
+    validations:
+      required: false
