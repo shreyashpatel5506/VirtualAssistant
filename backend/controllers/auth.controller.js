@@ -38,12 +38,7 @@ export const sendOtp = async (req, res) => {
       return res.status(422).json({ message: "Invalid email format", success: false });
     }
 
-    // MX check
-    const domain = email.split("@")[1];
-    const mxRecords = await dns.resolveMx(domain);
-    if (!mxRecords.length) {
-      return res.status(422).json({ message: "Email domain does not accept mail", success: false });
-    }
+    
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
