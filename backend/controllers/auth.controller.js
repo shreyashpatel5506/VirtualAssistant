@@ -10,7 +10,6 @@ import moment from "moment";
 import axios from "axios";
 dotenv.config();
 
-import axios from "axios";
 
 const otpStorage = new Map();
 
