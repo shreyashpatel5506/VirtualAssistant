@@ -16,15 +16,21 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // MUST be false for 587
   auth: {
-    user: process.env.BREVO_SMTP_USER, // "apikey"
-    pass: process.env.BREVO_SMTP_KEY,  // real SMTP key
+    user: "apikey", // 🔥 HARDCODED (important)
+    pass: process.env.BREVO_SMTP_KEY,
   },
-  tls: {
-    rejectUnauthorized: true,
-  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
-
+transporter.verify((err) => {
+  if (err) {
+    console.error("❌ SMTP VERIFY FAILED:", err.message);
+  } else {
+    console.log("✅ SMTP READY");
+  }
+});
 
 const otpStorage = new Map();
 
