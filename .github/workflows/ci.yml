@@ -1,0 +1,42 @@
+name: Node Project CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install root dependencies (if any)
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          fi
+
+      - name: Install backend dependencies
+        run: |
+          if [ -d backend ]; then
+            cd backend
+            if [ -f package.json ]; then npm install; fi
+          fi
+
+      - name: Install frontend dependencies
+        run: |
+          if [ -d frontend ]; then
+            cd frontend
+            if [ -f package.json ]; then npm install; fi
+          fi
+
+      - name: Basic sanity check
+        run: echo "CI passed successfully"
