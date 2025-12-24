@@ -16,7 +16,7 @@ export const axiosInstance = axios.create({
         'Content-Type': 'application/json',
     },
     withCredentials: true,
-    timeout: 10000,
+    timeout: 60000,
 });
 
 // Request interceptor to add token from localStorage to Authorization header
