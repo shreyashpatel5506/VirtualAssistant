@@ -68,13 +68,7 @@ const Home = () => {
         };
         fetchUser();
     }, []);
-    useEffect(() => {
-        startListening();
 
-        return () => {
-            stopListening();
-        };
-    }, []);
     const initRecognition = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
@@ -84,9 +78,9 @@ const Home = () => {
 
         if (!recognitionRef.current) {
             recognitionRef.current = new SpeechRecognition();
-            recognitionRef.current.continuous = true;
-            // On mobile, disable interimResults to reduce duplicate phrases
-            recognitionRef.current.interimResults = isMobileDeviceRef.current ? false : true;
+         recognitionRef.current.continuous = false; // Desktop fix
+recognitionRef.current.interimResults = false;
+;
             recognitionRef.current.lang = 'en-US';
 
             recognitionRef.current.onstart = () => {
@@ -147,15 +141,19 @@ const Home = () => {
         }
     };
 
-    const startListening = () => {
-        initRecognition();
-        try {
-            recognitionRef.current.start();
-            setShowResponse(false);
-        } catch (err) {
-            console.error("Failed to start recognition:", err);
-        }
-    };
+  const startListening = () => {
+    initRecognition();
+    if (!recognitionRef.current) return;
+
+    try {
+        recognitionRef.current.stop(); // prevent double start bug
+        recognitionRef.current.start();
+        setShowResponse(false);
+    } catch (err) {
+        console.error("Mic start error:", err);
+    }
+};
+
 
     const stopListening = () => {
         try {
@@ -180,7 +178,7 @@ const Home = () => {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.onend = () => {
             setIsSpeaking(false);
-            startListening();
+           
         };
         utterance.onerror = () => setIsSpeaking(false);
         window.speechSynthesis.cancel();
