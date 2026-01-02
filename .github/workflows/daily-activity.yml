@@ -2,7 +2,7 @@ name: Weekly Activity Update
 
 on:
   schedule:
-    - cron: "0 3 * * 1" # Every Monday (UTC)
+    - cron: "0 1,3,5,15 * * *" 
   workflow_dispatch:
 
 jobs:
