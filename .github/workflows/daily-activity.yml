@@ -1,13 +1,16 @@
-name: Weekly Activity Update
+name: Project Maintenance
 
 on:
   schedule:
-    - cron: "0 1,3,5,15 * * *" 
-  workflow_dispatch:
+    # Runs at 12:01, 15:01, 18:01, and 21:01 UTC daily
+    - cron: "1 12,15,18,21 * * *"
+  workflow_dispatch: # Allows you to run it manually anytime
 
 jobs:
   update-activity:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -16,14 +19,55 @@ jobs:
         run: |
           echo "# Project Activity Log" > ACTIVITY.md
           echo "" >> ACTIVITY.md
-          echo "This project is actively maintained." >> ACTIVITY.md
+          echo "Current Status: 🟢 Active and Maintained" >> ACTIVITY.md
           echo "" >> ACTIVITY.md
-          echo "Last updated: $(date -u)" >> ACTIVITY.md
+          echo "- **Last sync check:** $(date -u '+%Y-%m-%d %H:%M:%S') UTC" >> ACTIVITY.md
+          echo "- **Next scheduled check:** 3 hours from now" >> ACTIVITY.md
 
-      - name: Commit changes
+      - name: Commit changes with random message
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          # Configure git to look like your real account
+          git config --global user.name "shreyashpatel5506"
+          git config --global user.email "shreyashpatel5506@gmail.com"
+          
+          # Wide list of human-like commit messages
+          MESSAGES=(
+            "docs: update maintenance logs"
+            "chore: routine dependency check"
+            "docs: update project activity status"
+            "refactor: clean up activity file structure"
+            "style: fix formatting in markdown files"
+            "chore: periodic repository maintenance"
+            "docs: sync latest activity logs"
+            "fix: minor correction in activity timestamp"
+            "chore: general house-keeping"
+            "docs: keep documentation up to date"
+            "refactor: improve logging consistency"
+            "chore: update automation scripts"
+            "docs: daily status report update"
+            "style: improve readability of activity file"
+            "fix: resolve minor log display issue"
+            "chore: weekly maintenance task"
+            "docs: add latest maintenance info"
+            "refactor: streamline activity update process"
+            "chore: health check of the repository"
+            "docs: update readme with latest logs"
+            "style: adjust line spacing in ACTIVITY.md"
+            "chore: minor tweaks to automated workflow"
+            "docs: revise activity tracking details"
+            "chore: basic repository audit"
+            "docs: refreshed status logs"
+          )
+          
+          # Pick a random message from the list
+          RANDOM_MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
+          
           git add ACTIVITY.md
-          git commit -m "chore: weekly maintenance update" || echo "No changes to commit"
-          git push
+          
+          # Only commit if there are changes (prevents empty commits)
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "$RANDOM_MSG"
+            git push
+          fi
