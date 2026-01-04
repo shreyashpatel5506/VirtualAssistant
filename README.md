@@ -182,7 +182,7 @@ npm run build
 npm start
 ```
 
-## 📁 Project Structure
+## 📁 Project Structure may be different
 
 ```
 VirtualAssistant/
