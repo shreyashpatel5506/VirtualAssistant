@@ -3,7 +3,7 @@ name: Project Maintenance
 on:
   schedule:
     # Runs at 12:01, 15:01, 18:01, and 21:01 UTC daily
-    - cron: "1 12,15,18,21 * * *"
+    - cron: "1 12,15,21 * * *"
   workflow_dispatch: # Allows you to run it manually anytime
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
           # Configure git to look like your real account
           git config --global user.name "shreyashpatel5506"
           git config --global user.email "shreyashpatel5506@gmail.com"
-          
+
           # Wide list of human-like commit messages
           MESSAGES=(
             "docs: update maintenance logs"
@@ -58,12 +58,12 @@ jobs:
             "chore: basic repository audit"
             "docs: refreshed status logs"
           )
-          
+
           # Pick a random message from the list
           RANDOM_MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
-          
+
           git add ACTIVITY.md
-          
+
           # Only commit if there are changes (prevents empty commits)
           if git diff --staged --quiet; then
             echo "No changes to commit"
