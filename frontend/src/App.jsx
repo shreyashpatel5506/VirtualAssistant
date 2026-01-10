@@ -10,7 +10,7 @@ import React from 'react'
 import Home from './pages/Home.jsx'
 import toast, { Toaster } from 'react-hot-toast';
 import Customize2 from './pages/Customize2'
-
+import { Navigate } from "react-router-dom";
 function App() {
   const { users, setUsers } = useContext(UserContext); // ✅ use UserContext
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
@@ -19,6 +19,16 @@ function App() {
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
   }, []);
+
+const ProtectedRoute = ({ children }) => {
+  const { users } = useContext(UserContext);
+
+  if (!users) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
   return (
     <>
@@ -30,14 +40,31 @@ function App() {
         }}
       ></div>
 
-      <Routes>
-        <Route path="/" element={(users?.assistantName && users?.assistantImage) ? <Home /> : <Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={!users ? <Login /> : <Home />} />
-        <Route path="/passwordreset" element={<PasswordReset />} />
-        <Route path="/customize" element={users ? <Customize /> : <Login />} />
-        <Route path="/customize2" element={users ? <Customize2 /> : <Login />} />
-      </Routes>
+   <Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/signup" element={<Signup />} />
+  <Route path="/passwordreset" element={<PasswordReset />} />
+
+  <Route
+    path="/customize"
+    element={
+      <ProtectedRoute>
+        <Customize />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/customize2"
+    element={
+      <ProtectedRoute>
+        <Customize2 />
+      </ProtectedRoute>
+    }
+  />
+</Routes>
+
       <Toaster position="top-center" reverseOrder={false} />
        
     </>

@@ -76,20 +76,34 @@ export const authStore = create((set, get) => ({
         email,
         password,
       });
+
       if (response.data.success) {
         toast.success("Login successful");
+
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        // Store token in localStorage as fallback for Authorization header
+
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
         }
+
         set({ isLogin: true });
+
+        return {
+          success: true,
+          user: response.data.user,
+        };
       } else {
         toast.error("Login failed");
         set({ isLogin: false });
+
+        return { success: false };
       }
     } catch (error) {
       console.error("Error during login:", error);
+      toast.error("Something went wrong");
+
+      set({ isLogin: false });
+      return { success: false };
     }
   },
 

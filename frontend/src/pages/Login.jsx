@@ -25,19 +25,22 @@ const Login = () => {
     const handleMouseLeave = () => setOffset({ x: 0, y: 0 });
 
     // Custom glowing cursor
+const handleLogin = async (e) => {
+  e.preventDefault();
 
+  if (!email || !password) return;
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        if (email && password) {
-            const result = login(email, password);
-            setUsers({ ...users, ...result });
-            
-        }
-        if (isLogin) {
-             navigate("/customize");
-        }
-    };
+  const result = await login(email, password);
+
+  if (result.success) {
+    navigate("/customize");
+  }
+};
+useEffect(() => {
+  if (isLogin) {
+    navigate("/customize");
+  }
+}, [isLogin]);
 
     return (
         <div
