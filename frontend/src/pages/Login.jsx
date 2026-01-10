@@ -32,7 +32,10 @@ const Login = () => {
         if (email && password) {
             const result = login(email, password);
             setUsers({ ...users, ...result });
-            navigate('/customize');
+            
+        }
+        if (isLogin) {
+             navigate("/customize");
         }
     };
 

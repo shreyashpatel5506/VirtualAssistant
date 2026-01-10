@@ -8,6 +8,7 @@ import { UserContext } from './Context/usercontext' // ✅ import context, not p
 import Customize from './pages/Customize'
 import React from 'react'
 import Home from './pages/Home.jsx'
+import toast, { Toaster } from 'react-hot-toast';
 import Customize2 from './pages/Customize2'
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
         <Route path="/customize" element={users ? <Customize /> : <Login />} />
         <Route path="/customize2" element={users ? <Customize2 /> : <Login />} />
       </Routes>
+      <Toaster position="top-center" reverseOrder={false} />
+       
     </>
   )
 }
