@@ -7,6 +7,8 @@ import userSpeack from "../assets/user.gif";
 
 const Home = () => {
     const { users, setUsers, getGeminiResponse } = useContext(UserContext);
+    const [textInput, setTextInput] = useState("");
+
     const { getCurrentUser, logout } = authStore();
     const navigate = useNavigate();
 
@@ -118,24 +120,8 @@ recognitionRef.current.interimResults = false;
                     isProcessingRef.current = true;
                     stopListening();
 
-                    getGeminiResponseRef.current(processedTranscript)
-                        .then(response => {
-                            if (response) {
-                                setAssistantResponse(response.response);
-                                setShowResponse(true);
-                                speak(response.response);
-                                if (response.actionUrl) {
-                                    setTimeout(() => {
-                                        window.open(response.actionUrl, '_blank');
-                                    }, 1000);
-                                }
-                            }
-                            isProcessingRef.current = false;
-                        })
-                        .catch(error => {
-                            console.error("Error getting Gemini response:", error);
-                            isProcessingRef.current = false;
-                        });
+                 handleUserCommand(processedTranscript);
+
                 }, 1000);
             };
         }
@@ -166,6 +152,10 @@ recognitionRef.current.interimResults = false;
     };
 
     const toggleListening = () => {
+
+        if (textInput.trim()) return;
+
+
         if (isListening) {
             stopListening();
         } else {
@@ -190,6 +180,34 @@ recognitionRef.current.interimResults = false;
         localStorage.clear();
                 window.location.href = "/login";
     };
+
+    const handleUserCommand = async (text) => {
+    if (!text || isProcessingRef.current) return;
+
+    isProcessingRef.current = true;
+    setCommand(text);
+    setUserSpeaking(false);
+
+    try {
+        const response = await getGeminiResponseRef.current(text);
+
+        if (response) {
+            setAssistantResponse(response.response);
+            setShowResponse(true);
+            speak(response.response);
+
+            if (response.actionUrl) {
+                setTimeout(() => {
+                    window.open(response.actionUrl, "_blank");
+                }, 1000);
+            }
+        }
+    } catch (err) {
+        console.error("Gemini error:", err);
+    } finally {
+        isProcessingRef.current = false;
+    }
+};
 
     return (
         <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col justify-center items-center p-6 relative overflow-hidden">
@@ -321,6 +339,36 @@ recognitionRef.current.interimResults = false;
                         </svg>
                     </div>
                 </motion.div>
+                    {/* Text Input */}
+<div className="mt-8 z-10 w-full max-w-md flex gap-2">
+    <textarea
+        type="textarea"
+        value={textInput}
+        onChange={(e) => setTextInput(e.target.value)}
+        onKeyDown={(e) => {
+            if (e.key === "Enter") {
+                handleUserCommand(textInput.trim());
+                setTextInput("");
+            }
+        }}
+        placeholder="Type your command..."
+        className="flex-1 px-4 py-3 rounded-lg bg-black bg-opacity-50
+                   text-white outline-none border border-cyan-400
+                   focus:ring-2 focus:ring-cyan-300"
+    />
+
+    <button
+        onClick={() => {
+            handleUserCommand(textInput.trim());
+            setTextInput("");
+        }}
+        className="px-5 py-3 rounded-lg font-bold
+                   bg-gradient-to-r from-cyan-400 to-blue-500
+                   text-black"
+    >
+        Send
+    </button>
+</div>
 
                 {/* Assistant Name */}
                 <h1 className='text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-6'>
